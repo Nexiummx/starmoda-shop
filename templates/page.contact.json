@@ -1,0 +1,64 @@
+{
+  "sections": {
+    "rich_text_intro": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Háblanos",
+            "heading_size": "h1"
+          }
+        },
+        "caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Estamos aquí para ayudarte",
+            "text_style": "subtitle",
+            "text_size": "medium"
+          }
+        }
+      },
+      "block_order": ["heading", "caption"],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "padding_top": 52,
+        "padding_bottom": 12
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "",
+        "heading_size": "h1",
+        "color_scheme": "scheme-1",
+        "padding_top": 20,
+        "padding_bottom": 36
+      }
+    },
+    "rich_text_info": {
+      "type": "rich-text",
+      "blocks": {
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>WhatsApp<\/strong><br>Escríbenos directo: wa.me\/52XXXXXXXXXX <em>(pendiente)<\/em><\/p><p><strong>Instagram<\/strong><br>@starmoda <em>(pendiente)<\/em><\/p><p><strong>Horario de atención<\/strong><br>Lunes a Sábado · 10am – 7pm<\/p><p><strong>Tienda física<\/strong><br>Dirección disponible próximamente.<\/p>"
+          }
+        }
+      },
+      "block_order": ["text"],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-2",
+        "full_width": false,
+        "padding_top": 36,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": ["rich_text_intro", "form", "rich_text_info"]
+}

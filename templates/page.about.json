@@ -1,0 +1,135 @@
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Star Moda · Boutique con intención",
+            "heading_size": "h1"
+          }
+        }
+      },
+      "block_order": ["heading"],
+      "settings": {
+        "image_overlay_opacity": 30,
+        "image_height": "medium",
+        "image_behavior": "none",
+        "desktop_content_position": "middle-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": false,
+        "color_scheme": "scheme-4",
+        "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
+        "show_text_below": false
+      }
+    },
+    "rich_text_story": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Nuestra historia",
+            "heading_size": "h2"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Star Moda nació en Durango, México, de una idea sencilla: que cada mujer merece encontrar prendas que la hagan sentir única. Seleccionamos cada pieza a mano, con criterio y con intención. No tenemos catálogos infinitos ni temporadas que se repiten. Solo prendas que llegaron para quedarse contigo.<\/p><p><em>Texto final pendiente — espacio para la historia de Mariana.<\/em><\/p>"
+          }
+        }
+      },
+      "block_order": ["heading", "text"],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "padding_top": 60,
+        "padding_bottom": 52
+      }
+    },
+    "multicolumn_values": {
+      "type": "multicolumn",
+      "blocks": {
+        "col_1": {
+          "type": "column",
+          "settings": {
+            "title": "Curación",
+            "text": "<p>Cada prenda pasa por nuestras manos antes de llegar a la tienda. Elegimos calidad, no cantidad.<\/p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "col_2": {
+          "type": "column",
+          "settings": {
+            "title": "Exclusividad",
+            "text": "<p>Piezas únicas, en unidades limitadas. Lo que ves es lo que hay — sin reposición.<\/p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "col_3": {
+          "type": "column",
+          "settings": {
+            "title": "Atención personal",
+            "text": "<p>Somos una boutique pequeña y lo sabemos. Cada cliente recibe atención real y cercana.<\/p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": ["col_1", "col_2", "col_3"],
+      "settings": {
+        "title": "Lo que nos define",
+        "heading_size": "h2",
+        "image_width": "third",
+        "image_ratio": "adapt",
+        "button_label": "",
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "none",
+        "color_scheme": "scheme-3",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Únete a la lista",
+            "heading_size": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Sé la primera en saber cuando lleguen modelos nuevos.<\/p>"
+          }
+        },
+        "email_form": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": ["heading", "paragraph", "email_form"],
+      "settings": {
+        "color_scheme": "scheme-4",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": ["image_banner", "rich_text_story", "multicolumn_values", "newsletter"]
+}

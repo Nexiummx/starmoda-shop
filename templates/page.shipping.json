@@ -1,0 +1,32 @@
+{
+  "sections": {
+    "rich_text_shipping": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Política de envíos",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Tiempos de entrega<\/strong><\/p><ul><li>Durango ciudad: 1–2 días hábiles<\/li><li>Resto del país: 3–5 días hábiles<\/li><\/ul><p><strong>Costos<\/strong><\/p><ul><li>Envío gratis en compras mayores a $1,500 MXN<\/li><li>Costo estándar: $150 MXN<\/li><\/ul><p><strong>Paqueterías<\/strong><\/p><p>Enviamos con Estafeta y FedEx. <em>(Pendiente confirmar con Mariana.)<\/em><\/p><p><strong>Empaque<\/strong><\/p><p>Todas las prendas se envían con empaque seguro para que lleguen en perfectas condiciones.<\/p>"
+          }
+        }
+      },
+      "block_order": ["heading", "text"],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": ["rich_text_shipping"]
+}

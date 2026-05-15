@@ -1,0 +1,32 @@
+{
+  "sections": {
+    "rich_text_returns": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Cambios y devoluciones",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Plazo<\/strong><\/p><p>Tienes 7 días a partir de la fecha de entrega para solicitar un cambio o devolución.<\/p><p><strong>Condiciones<\/strong><\/p><ul><li>Prenda sin uso<\/li><li>Con etiqueta original<\/li><\/ul><p><strong>Proceso<\/strong><\/p><ol><li>Contáctanos por WhatsApp<\/li><li>Envíanos fotos de la prenda<\/li><li>Te enviamos guía de envío prepagada<\/li><li>Aplicamos crédito en tienda o reembolso según el caso<\/li><\/ol><p><strong>Excepciones<\/strong><\/p><p>Prendas de oferta no aplican cambio ni devolución.<\/p>"
+          }
+        }
+      },
+      "block_order": ["heading", "text"],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": ["rich_text_returns"]
+}
