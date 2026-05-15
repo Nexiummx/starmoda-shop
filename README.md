@@ -1,1 +1,0 @@
-# starmoda-shop
