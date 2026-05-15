@@ -3595,3 +3595,39 @@ details-disclosure > details {
     transform: translateX(100%) scaleX(0);
   }
 }
+
+/* ============================================
+   HEADER PREMIUM — FROSTED GLASS
+   Estas reglas van al final para ganar la cascada
+   sobre .header-wrapper y .gradient de arriba.
+   ============================================ */
+
+.header-wrapper,
+.header-wrapper.gradient {
+  background: rgba(var(--color-background), 0.45) !important;
+  background-attachment: initial !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.06) !important;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.scrolled-past-header .header-wrapper,
+.scrolled-past-header .header-wrapper.gradient {
+  background: rgba(var(--color-background), 0.72) !important;
+  box-shadow: 0 1px 32px rgba(var(--color-foreground), 0.05);
+}
+
+.list-menu__item--link {
+  letter-spacing: 0.06em;
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+@media screen and (min-width: 990px) {
+  .list-menu__item--link {
+    letter-spacing: 0.08em;
+    font-size: 1.1rem;
+  }
+}

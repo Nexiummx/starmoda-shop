@@ -139,6 +139,18 @@
               >
                 Última pieza
               </span>
+            {%- else -%}
+              {%- assign published_seconds = card_product.published_at | date: '%s' | plus: 0 -%}
+              {%- assign now_seconds = 'now' | date: '%s' | plus: 0 -%}
+              {%- assign days_since_publish = now_seconds | minus: published_seconds | divided_by: 86400 -%}
+              {%- if days_since_publish < 30 -%}
+                <span
+                  id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
+                  class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
+                >
+                  Nuevo
+                </span>
+              {%- endif -%}
             {%- endif -%}
           </div>
         </div>
@@ -563,6 +575,18 @@
             >
               Última pieza
             </span>
+          {%- else -%}
+            {%- assign published_seconds = card_product.published_at | date: '%s' | plus: 0 -%}
+            {%- assign now_seconds = 'now' | date: '%s' | plus: 0 -%}
+            {%- assign days_since_publish = now_seconds | minus: published_seconds | divided_by: 86400 -%}
+            {%- if days_since_publish < 30 -%}
+              <span
+                id="Badge-{{ section_id }}-{{ card_product.id }}"
+                class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
+              >
+                Nuevo
+              </span>
+            {%- endif -%}
           {%- endif -%}
         </div>
       </div>

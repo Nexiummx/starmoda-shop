@@ -1,0 +1,1236 @@
+{% liquid
+  assign new_arrivals = section.settings.new_arrivals_collection
+  assign bestsellers = section.settings.bestsellers_collection
+%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --star-black: #1c1b1a;
+    --star-cream: #f7f3ee;
+    --star-rose: #d8b6b6;
+    --star-mocha: #9b7b6c;
+    --star-gold: #d8b16a;
+    --star-beige: #dccdb8;
+    --star-white: #ffffff;
+    --star-muted: #7a6e66;
+    --star-display: var(--font-heading-family);
+    --star-body: var(--font-body-family);
+    background: var(--star-cream);
+    color: var(--star-black);
+  }
+
+  #shopify-section-{{ section.id }} .star-home {
+    font-family: var(--star-body);
+    font-weight: 300;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .star-announcement {
+    background: var(--star-black);
+    color: var(--star-cream);
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .star-announcement span {
+    color: var(--star-gold);
+    margin: 0 8px;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 620px;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__media {
+    background: #c4b09a;
+    position: relative;
+    min-height: 420px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__media img,
+  #shopify-section-{{ section.id }} .star-collection-card img,
+  #shopify-section-{{ section.id }} .star-product-card img,
+  #shopify-section-{{ section.id }} .star-ig-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .star-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    background: linear-gradient(160deg, #c9b49e 0%, #a8927e 40%, #8c7468 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__tag {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    background: var(--star-cream);
+    color: var(--star-black);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__content {
+    background: var(--star-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 72px;
+  }
+
+  #shopify-section-{{ section.id }} .star-eyebrow {
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--star-mocha);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__content .star-eyebrow {
+    justify-content: flex-start;
+    margin-bottom: 24px;
+  }
+
+  #shopify-section-{{ section.id }} .star-eyebrow::before,
+  #shopify-section-{{ section.id }} .star-eyebrow::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--star-gold);
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__content .star-eyebrow::after {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__title,
+  #shopify-section-{{ section.id }} .star-section__title,
+  #shopify-section-{{ section.id }} .star-banner__title,
+  #shopify-section-{{ section.id }} .star-collection-card__title,
+  #shopify-section-{{ section.id }} .star-product-card__title {
+    font-family: var(--star-display);
+    letter-spacing: 0;
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__title {
+    font-size: clamp(4.8rem, 6vw, 7.2rem);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--star-black);
+    margin: 0 0 24px;
+  }
+
+  #shopify-section-{{ section.id }} em {
+    font-style: italic;
+    color: var(--star-mocha);
+  }
+
+  #shopify-section-{{ section.id }} .star-hero__body {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    color: var(--star-muted);
+    max-width: 36rem;
+    margin: 0 0 44px;
+  }
+
+  #shopify-section-{{ section.id }} .star-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  #shopify-section-{{ section.id }} .star-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 15px 34px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .star-button--primary {
+    background: var(--star-black);
+    color: var(--star-cream);
+  }
+
+  #shopify-section-{{ section.id }} .star-button--primary:hover {
+    background: var(--star-mocha);
+  }
+
+  #shopify-section-{{ section.id }} .star-button--text {
+    color: var(--star-black);
+    padding-inline: 0;
+    opacity: 0.65;
+  }
+
+  #shopify-section-{{ section.id }} .star-button--text::after {
+    content: "→";
+    margin-left: 8px;
+  }
+
+  #shopify-section-{{ section.id }} .star-button--outline {
+    border-color: var(--star-black);
+    color: var(--star-black);
+  }
+
+  #shopify-section-{{ section.id }} .star-button--outline:hover {
+    background: var(--star-black);
+    color: var(--star-cream);
+  }
+
+  #shopify-section-{{ section.id }} .star-button--gold {
+    background: var(--star-gold);
+    color: var(--star-black);
+  }
+
+  #shopify-section-{{ section.id }} .star-button--gold:hover {
+    opacity: 0.85;
+  }
+
+  #shopify-section-{{ section.id }} .star-strip {
+    background: var(--star-beige);
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 20px;
+    border-block: 1px solid rgba(28, 27, 26, 0.08);
+    flex-wrap: wrap;
+  }
+
+  #shopify-section-{{ section.id }} .star-strip__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(28, 27, 26, 0.72);
+  }
+
+  #shopify-section-{{ section.id }} .star-strip__item svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--star-gold);
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  #shopify-section-{{ section.id }} .star-section__header {
+    text-align: center;
+    padding: 64px 60px 40px;
+  }
+
+  #shopify-section-{{ section.id }} .star-section__title {
+    font-size: clamp(3.8rem, 4.8vw, 5.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 16px 0 0;
+  }
+
+  #shopify-section-{{ section.id }} .star-collections,
+  #shopify-section-{{ section.id }} .star-products,
+  #shopify-section-{{ section.id }} .star-instagram__grid {
+    display: grid;
+    gap: 2px;
+    padding-inline: 60px;
+  }
+
+  #shopify-section-{{ section.id }} .star-collections {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-bottom: 80px;
+  }
+
+  #shopify-section-{{ section.id }} .star-collection-card {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    color: var(--star-cream);
+    text-decoration: none;
+    background: linear-gradient(170deg, #c9b49e, #9b7b6c);
+  }
+
+  #shopify-section-{{ section.id }} .star-collection-card img,
+  #shopify-section-{{ section.id }} .star-product-card img,
+  #shopify-section-{{ section.id }} .star-ig-card img {
+    transition: transform 0.45s ease;
+  }
+
+  #shopify-section-{{ section.id }} .star-collection-card:hover img,
+  #shopify-section-{{ section.id }} .star-product-card:hover img,
+  #shopify-section-{{ section.id }} .star-ig-card:hover img {
+    transform: scale(1.04);
+  }
+
+  #shopify-section-{{ section.id }} .star-collection-card__label {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 40px 24px 24px;
+    background: linear-gradient(to top, rgba(28, 27, 26, 0.62), transparent);
+  }
+
+  #shopify-section-{{ section.id }} .star-collection-card__title {
+    display: block;
+    font-size: 2.6rem;
+    line-height: 1.1;
+  }
+
+  #shopify-section-{{ section.id }} .star-collection-card__count {
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  #shopify-section-{{ section.id }} .star-marquee {
+    background: var(--star-beige);
+    overflow: hidden;
+    padding: 18px 0;
+    white-space: nowrap;
+    border-block: 1px solid rgba(28, 27, 26, 0.08);
+  }
+
+  #shopify-section-{{ section.id }} .star-marquee__track {
+    display: inline-flex;
+    animation: starMarquee 22s linear infinite;
+  }
+
+  #shopify-section-{{ section.id }} .star-marquee__item {
+    font-family: var(--star-display);
+    font-size: 2.2rem;
+    font-style: italic;
+    color: rgba(28, 27, 26, 0.36);
+    padding-inline: 48px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  #shopify-section-{{ section.id }} .star-marquee__item::after {
+    content: "✦";
+    font-family: var(--star-body);
+    font-size: 1rem;
+    color: var(--star-gold);
+  }
+
+  @keyframes starMarquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  #shopify-section-{{ section.id }} .star-products {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card {
+    color: var(--star-black);
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card__media {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: linear-gradient(150deg, #dccdb8 0%, #c4a98a 100%);
+    margin-bottom: 14px;
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card__badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--star-black);
+    color: var(--star-cream);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card__badge--sale {
+    background: var(--star-mocha);
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card__title {
+    font-size: 1.7rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 4px;
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card__meta {
+    color: var(--star-muted);
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card__price {
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+
+  #shopify-section-{{ section.id }} .star-product-card__compare {
+    color: var(--star-muted);
+    font-weight: 300;
+    margin-left: 6px;
+    text-decoration: line-through;
+  }
+
+  #shopify-section-{{ section.id }} .star-swatches {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .star-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(28, 27, 26, 0.16);
+    background: var(--star-beige);
+  }
+
+  #shopify-section-{{ section.id }} .star-cta {
+    text-align: center;
+    padding: 48px 20px 80px;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner {
+    background: var(--star-black);
+    color: var(--star-cream);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 320px;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__content {
+    padding: 72px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__eyebrow {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--star-gold);
+    margin-bottom: 24px;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__title {
+    font-size: clamp(4rem, 5vw, 5.6rem);
+    font-weight: 300;
+    line-height: 1.05;
+    margin: 0 0 28px;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__title em {
+    color: var(--star-gold);
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__body {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: rgba(247, 243, 238, 0.64);
+    max-width: 38rem;
+    margin: 0 0 40px;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__visual {
+    background: linear-gradient(135deg, #2a2826 0%, #1c1b1a 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__ring,
+  #shopify-section-{{ section.id }} .star-banner__ring::after {
+    position: absolute;
+    content: "";
+    width: 300px;
+    height: 300px;
+    border-radius: 999px;
+    border: 1px solid rgba(216, 177, 106, 0.18);
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__ring::after {
+    width: 200px;
+    height: 200px;
+    inset: 49px;
+    border-color: rgba(216, 177, 106, 0.28);
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__stat {
+    position: relative;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__number {
+    display: block;
+    font-family: var(--star-display);
+    font-size: 8rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--star-gold);
+  }
+
+  #shopify-section-{{ section.id }} .star-banner__label {
+    color: rgba(247, 243, 238, 0.46);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .star-bestsellers {
+    background: var(--star-white);
+    padding-bottom: 80px;
+  }
+
+  #shopify-section-{{ section.id }} .star-instagram {
+    padding-bottom: 80px;
+  }
+
+  #shopify-section-{{ section.id }} .star-instagram__handle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--star-mocha);
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    margin-top: 12px;
+    text-decoration: none;
+  }
+
+  #shopify-section-{{ section.id }} .star-instagram__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  #shopify-section-{{ section.id }} .star-ig-card {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: linear-gradient(135deg, #d8b6b6, #9b7b6c);
+    position: relative;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .star-ig-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 27, 26, 0);
+    transition: background 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .star-ig-card:hover::after {
+    background: rgba(28, 27, 26, 0.3);
+  }
+
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ section.id }} .star-hero,
+    #shopify-section-{{ section.id }} .star-banner {
+      grid-template-columns: 1fr;
+    }
+
+    #shopify-section-{{ section.id }} .star-hero__content,
+    #shopify-section-{{ section.id }} .star-banner__content {
+      padding: 56px 28px;
+    }
+
+    #shopify-section-{{ section.id }} .star-collections,
+    #shopify-section-{{ section.id }} .star-products {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-inline: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .star-instagram__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding-inline: 20px;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    #shopify-section-{{ section.id }} .star-announcement {
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    #shopify-section-{{ section.id }} .star-hero {
+      min-height: auto;
+    }
+
+    #shopify-section-{{ section.id }} .star-hero__media {
+      min-height: 360px;
+    }
+
+    #shopify-section-{{ section.id }} .star-hero__tag {
+      top: 20px;
+      left: 20px;
+      max-width: calc(100% - 40px);
+    }
+
+    #shopify-section-{{ section.id }} .star-section__header {
+      padding: 48px 20px 30px;
+    }
+
+    #shopify-section-{{ section.id }} .star-strip {
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 16px;
+      padding: 18px 20px;
+    }
+
+    #shopify-section-{{ section.id }} .star-strip__item {
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    #shopify-section-{{ section.id }} .star-products,
+    #shopify-section-{{ section.id }} .star-collections {
+      grid-template-columns: 1fr 1fr;
+      padding-inline: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .star-product-card__title {
+      font-size: 1.45rem;
+    }
+
+    #shopify-section-{{ section.id }} .star-collection-card__title {
+      font-size: 2.1rem;
+    }
+
+    #shopify-section-{{ section.id }} .star-instagram__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-inline: 12px;
+    }
+  }
+</style>
+
+<div class="star-home">
+  {% if section.settings.show_announcement %}
+    <div class="star-announcement">
+      {{ section.settings.announcement_text_1 }}
+      <span>✦</span>
+      {{ section.settings.announcement_text_2 }}
+      <span>✦</span>
+      {{ section.settings.announcement_text_3 }}
+    </div>
+  {% endif %}
+
+  <section class="star-hero">
+    <div class="star-hero__media">
+      {% if section.settings.hero_image != blank %}
+        {{
+          section.settings.hero_image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '600, 800, 1000, 1200, 1600',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            loading: 'eager',
+            alt: section.settings.hero_image.alt
+        }}
+      {% else %}
+        <div class="star-placeholder">Foto editorial aquí</div>
+      {% endif %}
+      {% if section.settings.hero_tag != blank %}
+        <div class="star-hero__tag">{{ section.settings.hero_tag }}</div>
+      {% endif %}
+    </div>
+
+    <div class="star-hero__content">
+      {% if section.settings.hero_eyebrow != blank %}
+        <div class="star-eyebrow">{{ section.settings.hero_eyebrow }}</div>
+      {% endif %}
+      <h1 class="star-hero__title">{{ section.settings.hero_title }}</h1>
+      {% if section.settings.hero_text != blank %}
+        <div class="star-hero__body">{{ section.settings.hero_text }}</div>
+      {% endif %}
+      <div class="star-actions">
+        {% if section.settings.hero_button_label != blank %}
+          <a class="star-button star-button--primary" href="{{ section.settings.hero_button_link | default: routes.all_products_collection_url }}">
+            {{ section.settings.hero_button_label }}
+          </a>
+        {% endif %}
+        {% if section.settings.hero_secondary_label != blank %}
+          <a class="star-button star-button--text" href="{{ section.settings.hero_secondary_link | default: routes.all_products_collection_url }}">
+            {{ section.settings.hero_secondary_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <div class="star-strip">
+    <div class="star-strip__item">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      {{ section.settings.strip_1 }}
+    </div>
+    <div class="star-strip__item">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      {{ section.settings.strip_2 }}
+    </div>
+    <div class="star-strip__item">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      {{ section.settings.strip_3 }}
+    </div>
+    <div class="star-strip__item">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      {{ section.settings.strip_4 }}
+    </div>
+  </div>
+
+  <section>
+    <div class="star-section__header">
+      <div class="star-eyebrow">{{ section.settings.collections_eyebrow }}</div>
+      <h2 class="star-section__title">{{ section.settings.collections_title }}</h2>
+    </div>
+    <div class="star-collections">
+      {% for block in section.blocks %}
+        {% if block.type == 'collection_card' %}
+          {% liquid
+            assign card_collection = block.settings.collection
+            assign card_image = block.settings.image
+            if card_image == blank and card_collection.featured_image != blank
+              assign card_image = card_collection.featured_image
+            endif
+            assign card_title = block.settings.title
+            if card_title == blank and card_collection != blank
+              assign card_title = card_collection.title
+            endif
+            assign card_url = block.settings.link
+            if card_url == blank and card_collection != blank
+              assign card_url = card_collection.url
+            endif
+          %}
+          <a class="star-collection-card" href="{{ card_url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
+            {% if card_image != blank %}
+              {{
+                card_image
+                | image_url: width: 900
+                | image_tag:
+                  widths: '360, 540, 720, 900',
+                  sizes: '(min-width: 990px) 25vw, 50vw',
+                  loading: 'lazy',
+                  alt: card_image.alt
+              }}
+            {% else %}
+              <div class="star-placeholder">Foto colección</div>
+            {% endif %}
+            <div class="star-collection-card__label">
+              <span class="star-collection-card__title">{{ card_title | default: 'Colección' }}</span>
+              <span class="star-collection-card__count">
+                {% if block.settings.caption != blank %}
+                  {{ block.settings.caption }}
+                {% elsif card_collection != blank %}
+                  {{ card_collection.products_count }} piezas
+                {% else %}
+                  Esta semana
+                {% endif %}
+              </span>
+            </div>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="star-marquee" aria-hidden="true">
+    <div class="star-marquee__track">
+      {% for i in (1..2) %}
+        <span class="star-marquee__item">Western</span>
+        <span class="star-marquee__item">Clean Girl</span>
+        <span class="star-marquee__item">Blusas</span>
+        <span class="star-marquee__item">Pantalones</span>
+        <span class="star-marquee__item">Vestidos</span>
+        <span class="star-marquee__item">Conjuntos</span>
+        <span class="star-marquee__item">Accesorios</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <section>
+    <div class="star-section__header">
+      <div class="star-eyebrow">{{ section.settings.new_arrivals_eyebrow }}</div>
+      <h2 class="star-section__title">{{ section.settings.new_arrivals_title }}</h2>
+    </div>
+    <div class="star-products">
+      {% if new_arrivals != blank and new_arrivals.products_count > 0 %}
+        {% for product in new_arrivals.products limit: section.settings.products_to_show %}
+          {% render 'star-product-card', product: product, section_id: section.id, badge_mode: 'new' %}
+        {% endfor %}
+      {% else %}
+        {% for i in (1..4) %}
+          <div class="star-product-card">
+            <div class="star-product-card__media"><div class="star-placeholder">Producto</div></div>
+            <h3 class="star-product-card__title">Producto Star Moda</h3>
+            <div class="star-product-card__meta">Selecciona una colección</div>
+            <div class="star-product-card__price">$349</div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% if section.settings.new_arrivals_button_label != blank %}
+      <div class="star-cta">
+        <a class="star-button star-button--outline" href="{{ new_arrivals.url | default: routes.all_products_collection_url }}">
+          {{ section.settings.new_arrivals_button_label }}
+        </a>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="star-banner">
+    <div class="star-banner__content">
+      <div class="star-banner__eyebrow">{{ section.settings.banner_eyebrow }}</div>
+      <h2 class="star-banner__title">{{ section.settings.banner_title }}</h2>
+      <div class="star-banner__body">{{ section.settings.banner_text }}</div>
+      {% if section.settings.banner_button_label != blank %}
+        <a class="star-button star-button--gold" href="{{ section.settings.banner_button_link | default: routes.all_products_collection_url }}">
+          {{ section.settings.banner_button_label }}
+        </a>
+      {% endif %}
+    </div>
+    <div class="star-banner__visual">
+      <div class="star-banner__ring"></div>
+      <div class="star-banner__stat">
+        <span class="star-banner__number">{{ section.settings.banner_number }}</span>
+        <span class="star-banner__label">{{ section.settings.banner_label }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="star-bestsellers">
+    <div class="star-section__header">
+      <div class="star-eyebrow">{{ section.settings.bestsellers_eyebrow }}</div>
+      <h2 class="star-section__title">{{ section.settings.bestsellers_title }}</h2>
+    </div>
+    <div class="star-products">
+      {% if bestsellers != blank and bestsellers.products_count > 0 %}
+        {% for product in bestsellers.products limit: section.settings.products_to_show %}
+          {% render 'star-product-card', product: product, section_id: section.id, badge_mode: 'sale' %}
+        {% endfor %}
+      {% else %}
+        {% for i in (1..4) %}
+          <div class="star-product-card">
+            <div class="star-product-card__media"><div class="star-placeholder">Producto</div></div>
+            <h3 class="star-product-card__title">Favorito Star Moda</h3>
+            <div class="star-product-card__meta">Selecciona una colección</div>
+            <div class="star-product-card__price">$649</div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="star-instagram">
+    <div class="star-section__header">
+      <div class="star-eyebrow">{{ section.settings.instagram_eyebrow }}</div>
+      <h2 class="star-section__title">{{ section.settings.instagram_title }}</h2>
+      {% if section.settings.instagram_handle != blank %}
+        <a class="star-instagram__handle" href="{{ section.settings.instagram_link }}" target="_blank" rel="noopener">
+          {{ 'icon-instagram.svg' | inline_asset_content }}
+          {{ section.settings.instagram_handle }}
+        </a>
+      {% endif %}
+    </div>
+    <div class="star-instagram__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'instagram_tile' %}
+          <a class="star-ig-card" href="{{ block.settings.link | default: section.settings.instagram_link }}" target="_blank" rel="noopener" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              {{
+                block.settings.image
+                | image_url: width: 600
+                | image_tag:
+                  widths: '240, 360, 480, 600',
+                  sizes: '(min-width: 990px) 16vw, 50vw',
+                  loading: 'lazy',
+                  alt: block.settings.image.alt
+              }}
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Star Moda homepage",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Mostrar barra de anuncio",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_1",
+      "label": "Anuncio 1",
+      "default": "Envío gratis en compras mayores a $999"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_2",
+      "label": "Anuncio 2",
+      "default": "Recogida en tienda disponible"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_3",
+      "label": "Anuncio 3",
+      "default": "Nuevos ingresos cada semana"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Imagen hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_tag",
+      "label": "Etiqueta hero",
+      "default": "Nueva Colección"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow hero",
+      "default": "Western & Clean Girl"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "hero_title",
+      "label": "Título hero",
+      "default": "Estilo que <em>te define.</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_text",
+      "label": "Texto hero",
+      "default": "<p>Moda femenina con carácter. Piezas que combinan la esencia western con el minimalismo contemporáneo.</p>"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_label",
+      "label": "Botón principal",
+      "default": "Ver colección"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_link",
+      "label": "Link botón principal"
+    },
+    {
+      "type": "text",
+      "id": "hero_secondary_label",
+      "label": "Botón secundario",
+      "default": "Nuevos ingresos"
+    },
+    {
+      "type": "url",
+      "id": "hero_secondary_link",
+      "label": "Link botón secundario"
+    },
+    {
+      "type": "text",
+      "id": "strip_1",
+      "label": "Beneficio 1",
+      "default": "Envío a todo México"
+    },
+    {
+      "type": "text",
+      "id": "strip_2",
+      "label": "Beneficio 2",
+      "default": "Recogida en tienda"
+    },
+    {
+      "type": "text",
+      "id": "strip_3",
+      "label": "Beneficio 3",
+      "default": "Nuevos ingresos semanales"
+    },
+    {
+      "type": "text",
+      "id": "strip_4",
+      "label": "Beneficio 4",
+      "default": "Atención por WhatsApp"
+    },
+    {
+      "type": "text",
+      "id": "collections_eyebrow",
+      "label": "Eyebrow colecciones",
+      "default": "Explora"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "collections_title",
+      "label": "Título colecciones",
+      "default": "Nuestras <em>colecciones</em>"
+    },
+    {
+      "type": "collection",
+      "id": "new_arrivals_collection",
+      "label": "Colección nuevos ingresos"
+    },
+    {
+      "type": "text",
+      "id": "new_arrivals_eyebrow",
+      "label": "Eyebrow nuevos ingresos",
+      "default": "Recién llegado"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "new_arrivals_title",
+      "label": "Título nuevos ingresos",
+      "default": "Nuevos <em>ingresos</em>"
+    },
+    {
+      "type": "text",
+      "id": "new_arrivals_button_label",
+      "label": "Botón nuevos ingresos",
+      "default": "Ver todos los productos"
+    },
+    {
+      "type": "collection",
+      "id": "bestsellers_collection",
+      "label": "Colección más vendidos"
+    },
+    {
+      "type": "text",
+      "id": "bestsellers_eyebrow",
+      "label": "Eyebrow más vendidos",
+      "default": "Las favoritas"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "bestsellers_title",
+      "label": "Título más vendidos",
+      "default": "Más <em>vendidos</em>"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 12,
+      "step": 4,
+      "label": "Productos a mostrar",
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "banner_eyebrow",
+      "label": "Eyebrow banner",
+      "default": "✦ Star Moda"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "banner_title",
+      "label": "Título banner",
+      "default": "Moda que se <em>siente.</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "banner_text",
+      "label": "Texto banner",
+      "default": "<p>Cada pieza está pensada para mujeres que saben lo que quieren. Western o clean, casual o especial, siempre tú.</p>"
+    },
+    {
+      "type": "text",
+      "id": "banner_button_label",
+      "label": "Botón banner",
+      "default": "Explorar todo"
+    },
+    {
+      "type": "url",
+      "id": "banner_button_link",
+      "label": "Link botón banner"
+    },
+    {
+      "type": "text",
+      "id": "banner_number",
+      "label": "Número banner",
+      "default": "250+"
+    },
+    {
+      "type": "text",
+      "id": "banner_label",
+      "label": "Etiqueta número",
+      "default": "Modelos disponibles"
+    },
+    {
+      "type": "text",
+      "id": "instagram_eyebrow",
+      "label": "Eyebrow Instagram",
+      "default": "Síguenos"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "instagram_title",
+      "label": "Título Instagram",
+      "default": "En <em>Instagram</em>"
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Usuario Instagram",
+      "default": "@starmoda_dgo"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link",
+      "label": "Link Instagram"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Colección",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Colección"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título personalizado"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Texto inferior"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link personalizado"
+        }
+      ]
+    },
+    {
+      "type": "instagram_tile",
+      "name": "Imagen Instagram",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Star Moda homepage",
+      "blocks": [
+        {
+          "type": "collection_card",
+          "settings": {
+            "title": "Western",
+            "caption": "42 piezas"
+          }
+        },
+        {
+          "type": "collection_card",
+          "settings": {
+            "title": "Clean Girl",
+            "caption": "38 piezas"
+          }
+        },
+        {
+          "type": "collection_card",
+          "settings": {
+            "title": "Conjuntos",
+            "caption": "24 piezas"
+          }
+        },
+        {
+          "type": "collection_card",
+          "settings": {
+            "title": "Novedades",
+            "caption": "Esta semana"
+          }
+        },
+        {
+          "type": "instagram_tile"
+        },
+        {
+          "type": "instagram_tile"
+        },
+        {
+          "type": "instagram_tile"
+        },
+        {
+          "type": "instagram_tile"
+        },
+        {
+          "type": "instagram_tile"
+        },
+        {
+          "type": "instagram_tile"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

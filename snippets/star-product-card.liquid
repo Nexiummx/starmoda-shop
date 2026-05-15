@@ -1,0 +1,109 @@
+{% comment %}
+  Star Moda editorial product card.
+
+  Accepts:
+  - product: Product object
+  - section_id: String
+  - badge_mode: String, "new" or "sale"
+{% endcomment %}
+
+{% liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  assign show_sale = false
+  if selected_variant.compare_at_price > selected_variant.price
+    assign show_sale = true
+  endif
+
+  assign published_seconds = product.published_at | date: '%s' | plus: 0
+  assign now_seconds = 'now' | date: '%s' | plus: 0
+  assign days_since_publish = now_seconds | minus: published_seconds | divided_by: 86400
+  assign show_new = false
+  if days_since_publish < 30
+    assign show_new = true
+  endif
+%}
+
+<a class="star-product-card" href="{{ product.url }}" aria-labelledby="star-card-title-{{ section_id }}-{{ product.id }}">
+  <div class="star-product-card__media">
+    {% if product.featured_media != blank %}
+      {{
+        product.featured_media
+        | image_url: width: 900
+        | image_tag:
+          widths: '360, 540, 720, 900',
+          sizes: '(min-width: 990px) 25vw, 50vw',
+          loading: 'lazy',
+          alt: product.featured_media.alt
+      }}
+    {% else %}
+      <div class="star-placeholder">Producto</div>
+    {% endif %}
+
+    {% if product.available == false %}
+      <span class="star-product-card__badge">Agotado</span>
+    {% elsif show_sale %}
+      <span class="star-product-card__badge star-product-card__badge--sale">Sale</span>
+    {% elsif badge_mode == 'new' and show_new %}
+      <span class="star-product-card__badge">Nuevo</span>
+    {% elsif selected_variant.inventory_management == 'shopify' and selected_variant.inventory_quantity <= 2 and selected_variant.inventory_quantity > 0 %}
+      <span class="star-product-card__badge">Agotándose</span>
+    {% endif %}
+  </div>
+
+  <h3 class="star-product-card__title" id="star-card-title-{{ section_id }}-{{ product.id }}">
+    {{ product.title | escape }}
+  </h3>
+
+  <div class="star-product-card__meta">
+    {% if product.options_with_values.size > 0 %}
+      {% for option in product.options_with_values limit: 1 %}
+        {% for value in option.values limit: 1 %}
+          {{ value }}
+        {% endfor %}
+        {% if option.values.size > 1 %}
+          <span aria-hidden="true"> · </span>{{ option.values.size }} opciones
+        {% endif %}
+      {% endfor %}
+    {% elsif product.vendor != blank %}
+      {{ product.vendor }}
+    {% else %}
+      Star Moda
+    {% endif %}
+  </div>
+
+  <div class="star-product-card__price">
+    {{ selected_variant.price | money }}
+    {% if show_sale %}
+      <span class="star-product-card__compare">{{ selected_variant.compare_at_price | money }}</span>
+    {% endif %}
+  </div>
+
+  {% for option in product.options_with_values %}
+    {% assign option_name = option.name | downcase %}
+    {% if option_name contains 'color' or option_name contains 'colour' %}
+      <div class="star-swatches" aria-label="Colores disponibles">
+        {% for value in option.values limit: 4 %}
+          {% liquid
+            assign normalized_color = value | downcase
+            assign color_value = '#dccdb8'
+            if normalized_color contains 'negro' or normalized_color contains 'black'
+              assign color_value = '#1c1b1a'
+            elsif normalized_color contains 'blanco' or normalized_color contains 'white' or normalized_color contains 'crema'
+              assign color_value = '#f7f3ee'
+            elsif normalized_color contains 'rosa' or normalized_color contains 'pink' or normalized_color contains 'nude'
+              assign color_value = '#d8b6b6'
+            elsif normalized_color contains 'mocha' or normalized_color contains 'cafe' or normalized_color contains 'café'
+              assign color_value = '#9b7b6c'
+            elsif normalized_color contains 'dorado' or normalized_color contains 'gold'
+              assign color_value = '#d8b16a'
+            elsif normalized_color contains 'beige' or normalized_color contains 'arena'
+              assign color_value = '#dccdb8'
+            endif
+          %}
+          <span class="star-swatch" title="{{ value | escape }}" style="background: {{ color_value }};"></span>
+        {% endfor %}
+      </div>
+      {% break %}
+    {% endif %}
+  {% endfor %}
+</a>
