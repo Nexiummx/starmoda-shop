@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "star_homepage": {
@@ -7,7 +16,6 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "image": "",
             "title": "Western",
             "caption": "42 piezas",
             "link": ""
@@ -17,7 +25,6 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "image": "",
             "title": "Clean Girl",
             "caption": "38 piezas",
             "link": ""
@@ -27,7 +34,6 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "image": "",
             "title": "Conjuntos",
             "caption": "24 piezas",
             "link": ""
@@ -37,51 +43,8 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "image": "",
             "title": "Novedades",
             "caption": "Esta semana",
-            "link": ""
-          }
-        },
-        "instagram_1": {
-          "type": "instagram_tile",
-          "settings": {
-            "image": "",
-            "link": ""
-          }
-        },
-        "instagram_2": {
-          "type": "instagram_tile",
-          "settings": {
-            "image": "",
-            "link": ""
-          }
-        },
-        "instagram_3": {
-          "type": "instagram_tile",
-          "settings": {
-            "image": "",
-            "link": ""
-          }
-        },
-        "instagram_4": {
-          "type": "instagram_tile",
-          "settings": {
-            "image": "",
-            "link": ""
-          }
-        },
-        "instagram_5": {
-          "type": "instagram_tile",
-          "settings": {
-            "image": "",
-            "link": ""
-          }
-        },
-        "instagram_6": {
-          "type": "instagram_tile",
-          "settings": {
-            "image": "",
             "link": ""
           }
         }
@@ -90,20 +53,13 @@
         "collection_western",
         "collection_clean",
         "collection_sets",
-        "collection_new",
-        "instagram_1",
-        "instagram_2",
-        "instagram_3",
-        "instagram_4",
-        "instagram_5",
-        "instagram_6"
+        "collection_new"
       ],
       "settings": {
         "show_announcement": true,
         "announcement_text_1": "Envío gratis en compras mayores a $999",
         "announcement_text_2": "Recogida en tienda disponible",
         "announcement_text_3": "Nuevos ingresos cada semana",
-        "hero_image": "",
         "hero_tag": "Nueva Colección",
         "hero_eyebrow": "Western & Clean Girl",
         "hero_title": "Estilo que <em>te define.</em>",
@@ -135,12 +91,42 @@
         "banner_label": "Modelos disponibles",
         "instagram_eyebrow": "Síguenos",
         "instagram_title": "En <em>Instagram</em>",
-        "instagram_handle": "@starmoda_dgo",
-        "instagram_link": "https://www.instagram.com/starmoda_dgo/"
+        "instagram_handle": "@starmodamx",
+        "instagram_link": "https://www.instagram.com/starmodamx/"
+      }
+    },
+    "17792562192afbfc60": {
+      "type": "apps",
+      "blocks": {
+        "instafeed_app_block_rdjLKf": {
+          "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
+          "settings": {
+            "title": "",
+            "title_color": "",
+            "title_size_v2": 0,
+            "alignment": "center",
+            "instafeed_margin_top": 0,
+            "instafeed_margin_bottom": 0,
+            "instafeed_margin_sides": 0,
+            "show_instagram_link": false,
+            "link_alignment": "center",
+            "link_color": "#000000",
+            "background_color": "",
+            "feed_id": "",
+            "html_area": ""
+          }
+        }
+      },
+      "block_order": [
+        "instafeed_app_block_rdjLKf"
+      ],
+      "settings": {
+        "include_margins": true
       }
     }
   },
   "order": [
-    "star_homepage"
+    "star_homepage",
+    "17792562192afbfc60"
   ]
 }

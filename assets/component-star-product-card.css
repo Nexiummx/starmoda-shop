@@ -1,0 +1,237 @@
+/* Star Moda — Product Card Component */
+
+:root {
+  --star-black: #1c1b1a;
+  --star-cream: #f7f3ee;
+  --star-beige: #dccdb8;
+  --star-mocha: #9b7b6c;
+  --star-muted: #7a6e66;
+  --star-gold: #d8b16a;
+}
+
+.star-product-card {
+  color: var(--star-black);
+  text-decoration: none;
+  min-width: 0;
+  display: block;
+}
+
+.star-product-card__media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: linear-gradient(150deg, #dccdb8 0%, #c4a98a 100%);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.star-product-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
+}
+
+.star-product-card__media .star-product-card__secondary {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.star-product-card:hover .star-product-card__media img:first-of-type {
+  opacity: 0;
+}
+
+.star-product-card:hover .star-product-card__media .star-product-card__secondary {
+  opacity: 1;
+}
+
+.star-product-card:hover .star-product-card__media img {
+  transform: scale(1.04);
+}
+
+.star-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, #c9b49e 0%, #a8927e 40%, #8c7468 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.star-product-card__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--star-black);
+  color: var(--star-cream);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  z-index: 1;
+}
+
+.star-product-card__badge--sale {
+  background: var(--star-mocha);
+}
+
+.star-product-card__wishlist {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(247, 243, 238, 0.85);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.star-product-card:hover .star-product-card__wishlist {
+  opacity: 1;
+}
+
+.star-product-card__wishlist svg {
+  width: 14px;
+  height: 14px;
+}
+
+.star-product-card__overlay {
+  position: absolute;
+  inset: auto 0 0;
+  background: rgba(28, 27, 26, 0.55);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.star-product-card:hover .star-product-card__overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.star-product-card__body {
+  padding: 0 2px;
+}
+
+.star-product-card__topline {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: var(--star-muted);
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+
+.star-product-card__title {
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0 0 4px;
+  font-family: var(--font-heading-family);
+}
+
+.star-product-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.star-product-card__title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.star-product-card__meta {
+  color: var(--star-muted);
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.star-product-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.star-product-card__price {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.star-product-card__compare {
+  color: var(--star-muted);
+  font-weight: 300;
+  margin-left: 6px;
+  text-decoration: line-through;
+}
+
+.star-product-card__sizes {
+  display: flex;
+  gap: 4px;
+}
+
+.star-product-card__sizes span {
+  font-size: 1rem;
+  color: var(--star-muted);
+}
+
+.star-swatches {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.star-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(28, 27, 26, 0.16);
+  background: var(--star-beige);
+}
+
+.star-product-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+.star-product-card__cta:hover {
+  color: var(--star-mocha);
+}
+
+.star-product-card__cta svg {
+  width: 14px;
+  height: 14px;
+}
