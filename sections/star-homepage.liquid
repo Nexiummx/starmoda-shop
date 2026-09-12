@@ -510,10 +510,14 @@
   }
 
   /* ==================================================================
-   * 12. NEWSLETTER — la banda que por fin usa el rosa nude
+   * 12. NEWSLETTER — banda en beige arena
+   *
+   * Antes iba en rosa nude. El rosa es el tono más saturado de la paleta
+   * y en una banda entera pesaba demasiado; sigue vivo donde aporta
+   * información, que es el badge de rebaja de la tarjeta y de la ficha.
    * ================================================================== */
   #shopify-section-{{ section.id }} .star-newsletter {
-    background: var(--star-rose);
+    background: var(--star-beige);
     text-align: center;
   }
 
@@ -531,14 +535,14 @@
     margin: 2rem 0 1.6rem;
   }
 
-  /* Sobre el rosa nude, el mocha decorativo se queda en 2.07:1. El
-   * mocha-ink sube a 3.06:1, que es el mínimo para texto grande. */
+  /* Sobre el beige, el mocha decorativo no llega; el mocha-ink da 3.5:1
+   * y el titular mide 30-44px, así que cumple como texto grande. */
   #shopify-section-{{ section.id }} .star-newsletter__title em {
     color: var(--star-mocha-ink);
   }
 
-  /* El eyebrow es de 11.5px: necesita 4.5:1 y el mocha-ink no llega.
-   * En espresso da 9.2:1. */
+  /* El eyebrow es de 11.5px: necesita 4.5:1 y el mocha-ink se queda en
+   * 3.5:1 sobre el beige. En espresso da 10.5:1. */
   #shopify-section-{{ section.id }} .star-newsletter .star-eyebrow {
     color: var(--star-black);
   }
@@ -573,7 +577,7 @@
   }
 
   #shopify-section-{{ section.id }} .star-newsletter__field::placeholder {
-    color: rgba(28, 27, 26, 0.58);
+    color: rgba(28, 27, 26, 0.7);
   }
 
   #shopify-section-{{ section.id }} .star-newsletter__field:focus {
@@ -593,7 +597,8 @@
     margin-top: 1.6rem;
     font-size: var(--star-fs-micro);
     letter-spacing: 0.08em;
-    color: rgba(28, 27, 26, 0.66);
+    /* al 0.66 sobre el beige daba 4.08:1 y la nota mide 10.5px */
+    color: rgba(28, 27, 26, 0.72);
   }
 
   #shopify-section-{{ section.id }} .star-newsletter__feedback {
