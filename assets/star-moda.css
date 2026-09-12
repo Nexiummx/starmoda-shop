@@ -273,6 +273,31 @@
   }
 }
 
+/* --- Red de seguridad de la animación de entrada ---
+ * Dawn deja el contenido en `opacity: 0.01` y sólo lo revela cuando
+ * animations.js le quita .scroll-trigger--offscreen. Si ese JS no llega
+ * a correr, o el IntersectionObserver no dispara —el iframe del editor
+ * de temas es el caso habitual— la sección se queda invisible: texto del
+ * mismo color que su fondo, sin ningún error que lo delate.
+ *
+ * En el editor no hay motivo para arriesgarlo: ahí todo se ve siempre. */
+.shopify-design-mode .scroll-trigger,
+.shopify-design-mode .scroll-trigger.animate--fade-in,
+.shopify-design-mode .scroll-trigger.animate--slide-in {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Sin JS la página se sirve entera: más vale sin animación que en blanco. */
+html:not(.js) .scroll-trigger,
+html:not(.js) .scroll-trigger.animate--fade-in,
+html:not(.js) .scroll-trigger.animate--slide-in {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
 /* ============================================================
  * 1. VARIANT PICKER — TALLAS (pills)
  *    Cubre los 3 casos de Star Moda con un mismo componente:
