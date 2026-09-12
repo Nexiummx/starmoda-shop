@@ -1054,11 +1054,27 @@
         </div>
       {%- endif -%}
 
-      {%- if section.settings.banner_number != blank or section.settings.banner_number_2 != blank -%}
+      {%- liquid
+        comment
+          La primera cifra puede salir del catálogo real. Si se elige una
+          colección, manda su conteo; si no, se usa el texto escrito a mano.
+          all_products_count da el total de la colección sin que lo recorten
+          la paginación ni los filtros activos.
+        endcomment
+        assign stat_number = section.settings.banner_number
+        assign stat_source = section.settings.banner_stat_source
+
+        if stat_source == 'store'
+          assign stat_number = collections.all.all_products_count
+        elsif stat_source == 'collection' and section.settings.banner_stat_collection != blank
+          assign stat_number = section.settings.banner_stat_collection.all_products_count
+        endif
+      -%}
+      {%- if stat_number != blank or section.settings.banner_number_2 != blank -%}
         <dl class="star-banner__stats">
-          {%- if section.settings.banner_number != blank -%}
+          {%- if stat_number != blank -%}
             <div>
-              <dt class="star-banner__number">{{ section.settings.banner_number }}</dt>
+              <dt class="star-banner__number">{{ stat_number }}</dt>
               <dd class="star-banner__label">{{ section.settings.banner_label }}</dd>
             </div>
           {%- endif -%}
@@ -1495,10 +1511,29 @@
       "label": "Link botón"
     },
     {
+      "type": "select",
+      "id": "banner_stat_source",
+      "label": "Cifra 1 — de dónde sale",
+      "options": [
+        { "value": "manual", "label": "La escribo a mano" },
+        { "value": "store", "label": "Total de productos de la tienda" },
+        { "value": "collection", "label": "Productos de una colección" }
+      ],
+      "default": "store",
+      "info": "Con «total» o «colección» la cifra se actualiza sola al publicar o despublicar productos."
+    },
+    {
+      "type": "collection",
+      "id": "banner_stat_collection",
+      "label": "Cifra 1 — colección a contar",
+      "info": "Sólo se usa si arriba elegiste «Productos de una colección»."
+    },
+    {
       "type": "text",
       "id": "banner_number",
-      "label": "Cifra 1",
-      "default": "250+"
+      "label": "Cifra 1 (manual)",
+      "default": "250+",
+      "info": "Sólo se usa si arriba elegiste «La escribo a mano»."
     },
     {
       "type": "text",
