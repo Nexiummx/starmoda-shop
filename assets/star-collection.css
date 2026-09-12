@@ -370,8 +370,8 @@
 }
 
 .facets-wrapper {
-  flex: 0 0 24rem;
-  max-width: 24rem;
+  flex: 0 0 20rem;
+  max-width: 20rem;
   padding-right: 0;
 }
 
@@ -797,13 +797,21 @@
   padding-top: 0;
 }
 
+/* Sin `gap` aquí: por debajo de 990px la rejilla sigue siendo la flex de
+ * Dawn, con anchos en porcentaje y separación por márgenes negativos. Un
+ * gap se suma a ese cálculo y los dos ítems por fila dejan de caber, así
+ * que en móvil caía todo a una sola columna. El aire se pide por las
+ * variables de gutter que Dawn ya usa. El `gap` de verdad se declara más
+ * abajo, dentro del @media de escritorio, donde la rejilla sí es CSS Grid
+ * y las columnas las defino yo. */
 .collection .product-grid,
 .template-search .product-grid,
 ul.product-grid {
-  column-gap: var(--star-grid-gap);
-  row-gap: clamp(3.2rem, 4vw, 5.6rem);
+  --grid-mobile-horizontal-spacing: 1.2rem;
+  --grid-mobile-vertical-spacing: 3.2rem;
+  --grid-desktop-horizontal-spacing: 2.4rem;
+  --grid-desktop-vertical-spacing: 4.8rem;
   padding: 0;
-  margin: 0;
 }
 
 /* Dawn deja el grid pegado al borde superior tras la barra de orden */
@@ -813,6 +821,93 @@ ul.product-grid {
 
 .facets-vertical .collection {
   padding-top: 0;
+}
+
+/* ------------------------------------------------------------------
+ * REJILLA EDITORIAL
+ *
+ * Dawn maqueta la rejilla con flex y anchos en porcentaje: todas las
+ * fichas idénticas, fila tras fila. Funciona, pero lee como catálogo.
+ *
+ * Aquí pasa a CSS Grid en escritorio para poder destacar piezas: una de
+ * cada cinco ocupa 2x2 y alterna de lado, así el ojo recorre la página
+ * en zigzag en vez de barrer líneas. `dense` reacomoda los huecos que
+ * deja el salto, y como las filas las miden las fichas normales, la
+ * destacada sólo tiene que estirar su foto al 100%: sin cálculos de
+ * proporción que se rompan al cambiar el número de columnas.
+ * ------------------------------------------------------------------ */
+
+@media screen and (min-width: 990px) {
+  .collection ul.product-grid,
+  .template-search ul.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: row dense;
+    align-items: start;
+    column-gap: var(--star-grid-gap);
+    row-gap: clamp(3.2rem, 4vw, 5.6rem);
+    margin: 0;
+  }
+
+  /* Dawn reparte anchos por clase; en grid sobran */
+  .collection ul.product-grid > li.grid__item,
+  .template-search ul.product-grid > li.grid__item {
+    width: auto;
+    max-width: none;
+    margin: 0;
+  }
+
+  /* La destacada: 1ª y 6ª de cada bloque de diez, en lados opuestos.
+   * align-self: stretch es obligatorio — la rejilla va con
+   * align-items: start para que las fichas normales no se estiren, y sin
+   * esta excepción la destacada se quedaba a la altura de su contenido
+   * en vez de ocupar sus dos filas, y la foto colapsaba a nada. */
+  .collection ul.product-grid > li:nth-child(10n + 1),
+  .collection ul.product-grid > li:nth-child(10n + 6) {
+    grid-column: span 2;
+    grid-row: span 2;
+    align-self: stretch;
+  }
+
+  .collection ul.product-grid > li:nth-child(10n + 6) {
+    grid-column: 3 / span 2;
+  }
+
+  /* La foto deja de tener proporción fija y llena las dos filas */
+  .collection ul.product-grid > li:nth-child(10n + 1) .card-wrapper,
+  .collection ul.product-grid > li:nth-child(10n + 6) .card-wrapper,
+  .collection ul.product-grid > li:nth-child(10n + 1) .card,
+  .collection ul.product-grid > li:nth-child(10n + 6) .card {
+    height: 100%;
+  }
+
+  /* height llena las dos filas cuando existen; aspect-ratio es la red
+   * para la última destacada del listado, que puede no tener fila de
+   * abajo que la sostenga y si no colapsaría sin foto. */
+  .collection ul.product-grid > li:nth-child(10n + 1) .card__inner,
+  .collection ul.product-grid > li:nth-child(10n + 6) .card__inner {
+    --ratio-percent: 0 !important;
+    height: 100%;
+    aspect-ratio: 3 / 4;
+  }
+
+  .collection ul.product-grid > li:nth-child(10n + 1) .card,
+  .collection ul.product-grid > li:nth-child(10n + 6) .card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .collection ul.product-grid > li:nth-child(10n + 1) .card__inner,
+  .collection ul.product-grid > li:nth-child(10n + 6) .card__inner {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  /* El nombre crece con la pieza: la jerarquía la marca el tamaño */
+  .collection ul.product-grid > li:nth-child(10n + 1) .card__heading,
+  .collection ul.product-grid > li:nth-child(10n + 6) .card__heading {
+    font-size: clamp(2.2rem, 2vw, 2.8rem);
+  }
 }
 
 /* ---------- Estado vacío ---------- */
