@@ -1,0 +1,147 @@
+{% comment %}
+  Star Moda — fila de variantes en la tarjeta de producto.
+
+  Responde a la pregunta que se hace quien navega una colección de moda
+  antes que ninguna otra: ¿está mi talla? Sin esto hay que entrar a cada
+  ficha para descubrir que la única talla que queda es la XL.
+
+  Acepta:
+  - card_product  Product.
+
+  Qué imprime, y sólo si el producto lo tiene:
+  - Tallas, con las agotadas tachadas. La disponibilidad se calcula
+    recorriendo las variantes, no la lista de valores de la opción:
+    option.values trae todos los valores aunque no queden piezas.
+  - Colores, como puntos. Usa el swatch nativo si está configurado en el
+    admin y, si no, el mapa de la paleta cerrada del instructivo.
+
+  Ojo con el coste: el bucle es sobre card_product.variants, que en un
+  catálogo de moda son pocas por producto (colores x tallas). Si algún
+  día un producto pasa de ~100 variantes, conviene revisarlo.
+
+  Estilos en assets/star-card.css.
+{% endcomment %}
+
+{%- liquid
+  comment
+    `null` no es un literal de Liquid: se resolvía como variable
+    inexistente. Se usa blank, que sí lo es. Y las condiciones se
+    separan porque Liquid evalúa `and`/`or` de derecha a izquierda y no
+    admite paréntesis, así que mezclarlos en una línea no dice lo que
+    parece.
+  endcomment
+  assign size_option = blank
+  assign color_option = blank
+  assign size_index = 0
+
+  for option in card_product.options_with_values
+    assign name = option.name | downcase
+    if size_option == blank
+      if name contains 'talla' or name contains 'size'
+        assign size_option = option
+        assign size_index = forloop.index0
+      endif
+    endif
+    if color_option == blank
+      if name contains 'color' or name contains 'colour'
+        assign color_option = option
+      endif
+    endif
+  endfor
+-%}
+
+{%- if size_option != blank or color_option != blank -%}
+  <div class="star-card-variants">
+    {%- if size_option != blank -%}
+      {%- liquid
+        comment
+          Se arma una lista con las tallas que sí tienen existencias para
+          poder tachar las demás. `available` ya contempla el inventario
+          y la política de venta sin stock.
+        endcomment
+        assign in_stock = ''
+        for variant in card_product.variants
+          if variant.available
+            assign value = variant.options[size_index]
+            assign in_stock = in_stock | append: '|' | append: value | append: '|'
+          endif
+        endfor
+      -%}
+      <ul class="star-card-sizes" aria-label="Tallas disponibles">
+        {%- for value in size_option.values limit: 7 -%}
+          {%- liquid
+            assign needle = '|' | append: value | append: '|'
+            assign is_available = false
+            if in_stock contains needle
+              assign is_available = true
+            endif
+          -%}
+          <li
+            class="star-card-sizes__item{% unless is_available %} star-card-sizes__item--out{% endunless %}"
+            {% unless is_available %}
+              title="{{ value | escape }} — agotada"
+            {% endunless %}
+          >
+            {{- value -}}
+            {%- unless is_available -%}
+              <span class="visually-hidden"> (agotada)</span>
+            {%- endunless -%}
+          </li>
+        {%- endfor -%}
+        {%- if size_option.values.size > 7 -%}
+          <li class="star-card-sizes__more">+{{ size_option.values.size | minus: 7 }}</li>
+        {%- endif -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if color_option != blank -%}
+      <span class="star-swatches star-card-colors" aria-label="{{ color_option.values.size }} colores disponibles">
+        {%- for value in color_option.values limit: 5 -%}
+          {%- liquid
+            assign color_value = blank
+
+            if value.swatch.color
+              assign color_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+            elsif value.swatch.image
+              assign swatch_src = value.swatch.image | image_url: width: 40
+              assign color_value = 'url(' | append: swatch_src | append: ')'
+            endif
+
+            if color_value == blank
+              assign normalized = value | downcase
+              assign color_value = '#dccdb8'
+
+              if normalized contains 'negro' or normalized contains 'black'
+                assign color_value = '#1c1b1a'
+              elsif normalized contains 'blanco' or normalized contains 'white' or normalized contains 'crema'
+                assign color_value = '#f7f3ee'
+              elsif normalized contains 'rosa' or normalized contains 'pink' or normalized contains 'nude'
+                assign color_value = '#d8b6b6'
+              elsif normalized contains 'mocha' or normalized contains 'cafe' or normalized contains 'café' or normalized contains 'chocolate'
+                assign color_value = '#9b7b6c'
+              elsif normalized contains 'dorado' or normalized contains 'gold' or normalized contains 'mostaza'
+                assign color_value = '#d8b16a'
+              elsif normalized contains 'beige' or normalized contains 'arena' or normalized contains 'hueso'
+                assign color_value = '#dccdb8'
+              elsif normalized contains 'azul' or normalized contains 'denim' or normalized contains 'blue'
+                assign color_value = '#5b6b7d'
+              elsif normalized contains 'verde' or normalized contains 'olivo' or normalized contains 'green'
+                assign color_value = '#6f7358'
+              elsif normalized contains 'vino' or normalized contains 'rojo' or normalized contains 'red'
+                assign color_value = '#8a3b3b'
+              endif
+            endif
+          -%}
+          <span
+            class="star-swatch"
+            title="{{ value | escape }}"
+            style="--star-swatch-value: {{ color_value }};"
+          ></span>
+        {%- endfor -%}
+        {%- if color_option.values.size > 5 -%}
+          <span class="star-swatches__more">+{{ color_option.values.size | minus: 5 }}</span>
+        {%- endif -%}
+      </span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
