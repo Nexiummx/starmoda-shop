@@ -1,11 +1,18 @@
 {
   "sections": {
-    "banner": {
-      "type": "main-collection-banner",
+    "hero": {
+      "type": "star-collection-hero",
       "settings": {
-        "show_collection_description": true,
-        "show_collection_image": false,
-        "color_scheme": "scheme-1"
+        "show_image": true,
+        "height": "medium",
+        "overlay_opacity": 35,
+        "color_scheme": "scheme-4",
+        "eyebrow": "Colección",
+        "show_description": true,
+        "show_count": true,
+        "show_nav": true,
+        "nav_menu": "main-menu",
+        "nav_label": "Categorías"
       }
     },
     "product-grid": {
@@ -30,7 +37,7 @@
     }
   },
   "order": [
-    "banner",
+    "hero",
     "product-grid"
   ]
 }

@@ -101,6 +101,186 @@
 }
 
 /* ==================================================================
+ * 2 bis. CABECERA PROPIA (sections/star-collection-hero.liquid)
+ * ================================================================== */
+
+/* Sin `background` aquí a propósito: el fondo lo pone la clase
+ * color-scheme-N del esquema elegido. Al fijarlo en esta regla ganaba
+ * por orden de carga a .gradient y dejaba fondo beige con el texto
+ * crema del esquema encima — ilegible. */
+.star-col-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  padding: var(--star-gutter);
+}
+
+/* Con foto el fondo lo tapa la imagen; el espresso es la red por si la
+ * imagen tarda o falla, para que el texto crema no quede sobre blanco. */
+.star-col-hero--image {
+  background: var(--star-black);
+}
+
+.star-col-hero--small {
+  min-height: clamp(18rem, 24vh, 28rem);
+}
+
+.star-col-hero--medium {
+  min-height: clamp(26rem, 38vh, 44rem);
+}
+
+.star-col-hero--large {
+  min-height: clamp(34rem, 56vh, 64rem);
+}
+
+/* La foto va detrás del velo, y el velo detrás del texto */
+.star-col-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.star-col-hero--image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(28, 27, 26, calc(var(--star-col-hero-veil, 0.35) + 0.22)) 0%,
+    rgba(28, 27, 26, var(--star-col-hero-veil, 0.35)) 55%,
+    rgba(28, 27, 26, calc(var(--star-col-hero-veil, 0.35) * 0.45)) 100%
+  );
+}
+
+/* Sobre foto el texto siempre va en crema: el esquema de color sólo
+ * manda cuando la colección no tiene portada. */
+.star-col-hero--image,
+.star-col-hero--image .star-col-hero__title,
+.star-col-hero--image .star-col-hero__text,
+.star-col-hero--image .star-col-hero__count {
+  color: var(--star-cream);
+}
+
+/* El .star-eyebrow global va en mocha-ink, calibrado a 5.2:1 sobre
+ * CREMA. Aquí el fondo lo decide el esquema, y sobre el espresso ese
+ * mocha cae a 3.01:1. Se cuelga del color del esquema para que valga en
+ * cualquiera de los cinco. */
+.star-col-hero__eyebrow {
+  color: rgb(var(--color-foreground));
+}
+
+.star-col-hero--image .star-col-hero__eyebrow {
+  color: var(--star-cream);
+}
+
+.star-col-hero__inner {
+  position: relative;
+  max-width: 64rem;
+}
+
+.star-col-hero__title {
+  margin: 1.8rem 0 0;
+  font-size: var(--star-fs-display-l);
+}
+
+.star-col-hero__text {
+  margin-top: 1.6rem;
+  max-width: 52ch;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-body-l);
+  line-height: 1.7;
+  opacity: 0.82;
+}
+
+.star-col-hero__text > *:first-child {
+  margin-top: 0;
+}
+
+.star-col-hero__text > *:last-child {
+  margin-bottom: 0;
+}
+
+.star-col-hero__count {
+  margin: 1.6rem 0 0;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+/* ---------- Barra de categorías ---------- */
+
+.star-col-nav {
+  border-bottom: 0.1rem solid var(--star-hair);
+  padding-inline: var(--star-gutter);
+  overflow-x: auto;
+  /* en móvil se desliza; la barra de scroll sobra */
+  scrollbar-width: none;
+}
+
+.star-col-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.star-col-nav__list {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.8rem, 2.4vw, 3.6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.star-col-nav__link {
+  display: block;
+  padding: 1.6rem 0;
+  border-bottom: 0.2rem solid transparent;
+  color: var(--star-muted);
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--star-fast) var(--star-ease), border-color var(--star-fast) var(--star-ease);
+}
+
+.star-col-nav__link:hover {
+  color: var(--star-black);
+  border-bottom-color: var(--star-hair-strong);
+}
+
+.star-col-nav__link--active {
+  color: var(--star-black);
+  border-bottom-color: var(--star-black);
+}
+
+@media screen and (max-width: 749px) {
+  .star-col-hero__title {
+    font-size: clamp(3rem, 10vw, 4.4rem);
+  }
+
+  .star-col-nav__link {
+    padding: 1.3rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-col-nav__link {
+    transition-duration: 1ms;
+  }
+}
+
+/* ==================================================================
  * 3. BARRA DE ORDEN Y CONTEO
  * ================================================================== */
 

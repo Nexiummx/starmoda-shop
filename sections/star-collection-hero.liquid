@@ -1,0 +1,198 @@
+{%- comment -%}
+  Star Moda — cabecera de colección.
+
+  Sustituye a main-collection-banner, que resolvía la cabecera como un
+  título flotando en una caja centrada: mucho aire vertical y ningún
+  ancla visual antes del producto.
+
+  Dos estados, mismo bloque:
+  · Con imagen de portada -> banda a sangre con la foto de fondo, velo
+    para garantizar el contraste y el título en crema encima.
+  · Sin imagen -> banda del esquema de color elegido. Así la página ya
+    funciona hoy, sin fotografía de catálogo, y el día que se suba la
+    portada el hero cambia solo.
+
+  La barra de categorías sale de un menú del admin, no de un listado
+  automático de colecciones: así el orden y qué entra lo decide quien
+  edita, no el alfabeto.
+
+  Estilos en assets/star-collection.css (§2).
+{%- endcomment -%}
+
+{%- liquid
+  assign img = collection.image
+  if section.settings.show_image == false
+    assign img = blank
+  endif
+
+  assign has_image = false
+  if img != blank
+    assign has_image = true
+  endif
+
+  assign nav = linklists[section.settings.nav_menu]
+-%}
+
+<div
+  class="star-col-hero star-col-hero--{{ section.settings.height }}{% if has_image %} star-col-hero--image{% else %} color-{{ section.settings.color_scheme }} gradient{% endif %}"
+  {% if has_image %}
+    style="--star-col-hero-veil: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
+  {% endif %}
+>
+  {%- if has_image -%}
+    {{
+      img
+      | image_url: width: 3000
+      | image_tag:
+        class: 'star-col-hero__media',
+        widths: '750, 1100, 1500, 2000, 3000',
+        sizes: '100vw',
+        loading: 'eager',
+        fetchpriority: 'high',
+        alt: img.alt | default: collection.title
+    }}
+  {%- endif -%}
+
+  <div class="star-col-hero__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="star-eyebrow star-col-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+
+    <h1 class="star-display star-col-hero__title">
+      {{- collection.title | escape | default: 'Productos' -}}
+    </h1>
+
+    {%- if section.settings.show_description and collection.description != blank -%}
+      <div class="star-col-hero__text rte">{{ collection.description }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.show_count and collection.all_products_count > 0 -%}
+      <p class="star-col-hero__count">
+        {{- collection.all_products_count }}
+        {% if collection.all_products_count == 1 %}pieza{% else %}piezas{% endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- if section.settings.show_nav and nav != blank and nav.links.size > 0 -%}
+  <nav class="star-col-nav" aria-label="{{ section.settings.nav_label | default: 'Categorías' | escape }}">
+    <ul class="star-col-nav__list" role="list">
+      {%- for link in nav.links -%}
+        {%- liquid
+          assign is_active = false
+          if link.active or link.current
+            assign is_active = true
+          endif
+        -%}
+        <li>
+          <a
+            class="star-col-nav__link{% if is_active %} star-col-nav__link--active{% endif %}"
+            href="{{ link.url }}"
+            {% if is_active %}aria-current="page"{% endif %}
+          >
+            {{- link.title | escape -}}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cabecera de colección",
+  "tag": "section",
+  "class": "star-col-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banda"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "Usar la imagen de la colección de fondo",
+      "info": "La imagen se sube en Productos → Colecciones → Imagen. Sin imagen, la banda usa el esquema de color de abajo."
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "options": [
+        { "value": "small", "label": "Baja" },
+        { "value": "medium", "label": "Media" },
+        { "value": "large", "label": "Alta" }
+      ],
+      "default": "medium",
+      "label": "Altura"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 35,
+      "label": "Velo sobre la foto",
+      "info": "Oscurece la imagen para que el título se lea. Con fotos claras conviene subirlo."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-4",
+      "label": "Esquema de color",
+      "info": "Se usa sólo cuando la colección no tiene imagen."
+    },
+    {
+      "type": "header",
+      "content": "Contenido"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "default": "Colección",
+      "label": "Antetítulo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "default": true,
+      "label": "Mostrar la descripción de la colección"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "default": true,
+      "label": "Mostrar el número de piezas"
+    },
+    {
+      "type": "header",
+      "content": "Barra de categorías"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "default": true,
+      "label": "Mostrar la barra de categorías"
+    },
+    {
+      "type": "link_list",
+      "id": "nav_menu",
+      "default": "main-menu",
+      "label": "Menú",
+      "info": "Lo ideal es un menú propio con las colecciones en el orden que quieras. La categoría que se está viendo se marca sola."
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "default": "Categorías",
+      "label": "Nombre para lectores de pantalla"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}
