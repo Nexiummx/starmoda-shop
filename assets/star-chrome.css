@@ -311,8 +311,16 @@
   max-width: none;
 }
 
+/* NO poner `gap` aquí. La .grid de Dawn es flex con anchos en porcentaje
+ * (`width: calc(25% - gutter)`) y separación por márgenes negativos; un
+ * gap se SUMA a ese cálculo, los 4 bloques dejan de caber y el último
+ * se cae a una fila propia a todo el ancho. El aire se pide por las
+ * variables que Dawn ya usa para su gutter. */
 .footer__content-top .grid {
-  gap: clamp(3.2rem, 4vw, 6.4rem);
+  --grid-desktop-horizontal-spacing: 3.2rem;
+  --grid-desktop-vertical-spacing: 4rem;
+  --grid-mobile-horizontal-spacing: 2rem;
+  --grid-mobile-vertical-spacing: 3.2rem;
 }
 
 .footer-block__heading {
@@ -390,8 +398,13 @@
   color: rgba(var(--color-foreground), 0.5);
 }
 
+/* No se oculta: Dawn no pone placeholder en el input, usa el .field__label
+ * como etiqueta flotante. Al ocultarlo el campo quedaba como una caja
+ * vacía sin decir qué va dentro. */
 .footer .newsletter-form__field-wrapper .field__label {
-  display: none;
+  left: 0;
+  color: rgba(var(--color-foreground), 0.62);
+  font-size: 1.4rem;
 }
 
 .footer .newsletter-form__button {
@@ -449,13 +462,15 @@
   gap: 0.4rem 1.6rem;
 }
 
+/* Al 0.42 sobre el espresso del footer daba 3.79:1 y a 10.5px no se
+ * lee. Al 0.62 sube a 6.9:1. */
 .footer__copyright,
 .footer__payment,
 .footer__column--info {
   font-family: var(--star-body);
   font-size: var(--star-fs-micro);
   letter-spacing: 0.08em;
-  color: rgba(var(--color-foreground), 0.42);
+  color: rgba(var(--color-foreground), 0.62);
 }
 
 .footer__copyright a {
@@ -467,13 +482,10 @@
   color: rgb(var(--color-foreground));
 }
 
+/* Sin depender del hover: en táctil nunca llegaba, y al 0.5 sobre el
+ * espresso los iconos de pago no se distinguían. */
 .footer .list-payment__item {
-  opacity: 0.5;
-  transition: opacity var(--star-fast) var(--star-ease);
-}
-
-.footer:hover .list-payment__item {
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 /* Selectores de país/idioma: filete, no caja */

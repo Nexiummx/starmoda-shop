@@ -347,8 +347,16 @@
 
 /* Dawn imprime el precio tachado ANTES del rebajado, así que un
  * margin-left sobre el tachado no los separaba: quedaban "$399.00$249.00".
- * El gap del contenedor los separa vengan en el orden que vengan. */
-.product-card-wrapper .price__sale {
+ * El gap del contenedor los separa vengan en el orden que vengan.
+ *
+ * OJO con el selector: Dawn mantiene los dos contenedores en el DOM y
+ * decide cuál se ve con `.price__sale{display:none}` +
+ * `.price--on-sale .price__sale{display:initial}`. Si aquí se escribe
+ * `.product-card-wrapper .price__sale` la especificidad empata (0,2,0) y
+ * gana por orden de carga, así que el contenedor de oferta se fuerza
+ * visible en TODAS las tarjetas y el precio sale duplicado. Hay que
+ * colgar la regla de .price--on-sale para no tocar la visibilidad. */
+.product-card-wrapper .price--on-sale .price__sale {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;

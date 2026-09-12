@@ -38,7 +38,7 @@
           "type": "text",
           "settings": {
             "heading": "Contacto",
-            "subtext": "<p>WhatsApp: pendiente<br\/>correo: pendiente<br\/>Lunes a sábado · 10am – 7pm<\/p>"
+            "subtext": "<p>WhatsApp: pendiente<br/>correo: pendiente<br/>Lunes a sábado · 10am – 7pm</p>"
           }
         }
       },
@@ -53,7 +53,7 @@
         "newsletter_enable": true,
         "newsletter_heading": "Primero tú",
         "enable_follow_on_shop": true,
-        "show_social": true,
+        "show_social": false,
         "enable_country_selector": false,
         "enable_language_selector": false,
         "payment_enable": true,
