@@ -1,0 +1,461 @@
+/*
+ * star-moda.css — overrides globales (openspec change 007)
+ * =========================================================
+ * Estética clean girl / editorial: radius 0, sin sombras, borde fino,
+ * spacing generoso, tipografía Cormorant (headings) + Inter (resto).
+ *
+ * NOTA sobre Craft: los archivos base de Craft y Dawn son idénticos en
+ * CSS. La diferencia de Craft vive en settings_data.json (pills radius 40,
+ * radius 6 global, sombra sutil, border-opacity 55) — es decir, MÁS
+ * redondeado y con sombra. Eso es lo contrario a Star Moda. Aquí NO se
+ * copia el rounding de Craft; se toma solo su jerarquía estructural del
+ * picker (padding generoso, contraste claro selected/hover, estados
+ * disabled explícitos) y se adapta a la paleta y a radius 0.
+ */
+
+:root {
+  /* ---------- Paleta oficial Star Moda ---------- */
+  --star-black: #1c1b1a; /* Negro espresso */
+  --star-cream: #f7f3ee; /* Blanco crema */
+  --star-white: #fffdfa; /* Crema alta — para bandas que deben "levantar" */
+  --star-beige: #dccdb8; /* Beige arena */
+  --star-rose: #d8b6b6; /* Rosa nude */
+  --star-mocha: #9b7b6c; /* Mocha latte — decorativo y superficies */
+  --star-gold: #d8b16a; /* Dorado champagne */
+
+  /* Variantes de TEXTO. La paleta de marca no cambia: estos dos tonos existen
+   * porque --star-mocha (3.5:1) y el antiguo #7a6e66 (4.49:1) no alcanzan
+   * AA 4.5:1 sobre crema en los tamaños chicos (eyebrows de 11-12px).
+   * Regla: mocha/gold para rellenos y trazos, *-ink para texto. */
+  --star-mocha-ink: #7d6055; /* 5.2:1 sobre crema */
+  --star-muted: #756a62; /* 4.8:1 sobre crema — texto secundario */
+
+  /* ---------- Trazos ---------- */
+  --star-hair: rgba(28, 27, 26, 0.12); /* separadores */
+  --star-hair-strong: rgba(28, 27, 26, 0.26); /* bordes activos */
+  --star-line-hairline: rgba(28, 27, 26, 0.25); /* legado — picker */
+
+  /* ---------- Tipografía (Cormorant display / Inter body) ---------- */
+  --star-display: var(--font-heading-family);
+  --star-body: var(--font-body-family);
+
+  /* Escala fluida. Cormorant necesita tracking negativo en display: a 60px+
+   * el espaciado por defecto abre demasiado y pierde el aire editorial. */
+  --star-fs-display-xl: clamp(4.4rem, 7vw, 9rem);
+  --star-fs-display-l: clamp(3.6rem, 5vw, 6rem);
+  --star-fs-display-m: clamp(3rem, 3.6vw, 4.4rem);
+  --star-fs-display-s: clamp(2rem, 2.2vw, 2.6rem);
+  --star-fs-body-l: 1.6rem;
+  --star-fs-body: 1.4rem;
+  --star-fs-eyebrow: 1.15rem;
+  --star-fs-micro: 1.05rem;
+
+  --star-ls-display: -0.02em;
+  --star-ls-eyebrow: 0.22em;
+  --star-ls-micro: 0.16em;
+
+  /* ---------- Ritmo ---------- */
+  --star-gutter: clamp(2rem, 4.5vw, 6rem); /* margen lateral de banda */
+  --star-band: clamp(6.4rem, 8vw, 12rem); /* aire vertical entre secciones */
+  --star-grid-gap: clamp(1.2rem, 1.6vw, 2.4rem); /* canal de rejilla */
+
+  /* ---------- Movimiento ---------- */
+  --star-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --star-duration: 200ms;
+  --star-fast: 240ms;
+  --star-slow: 620ms;
+
+  /* Tokens del picker (una sola fuente de verdad) */
+  --star-pill-size: 4.4rem; /* alto/min-ancho — alinea tallas de 1 a 3 chars */
+}
+
+/* ============================================================
+ * 0. PRIMITIVAS DE MARCA (globales)
+ *    Viven aquí y no dentro de star-homepage.liquid para que la
+ *    colección, la PDP y las páginas estáticas hereden el mismo
+ *    sistema. Las secciones sólo componen; no redefinen.
+ * ============================================================ */
+
+/* --- Media: un único contrato para toda imagen de la tienda --- */
+.star-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--star-beige);
+}
+
+.star-media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--star-slow) var(--star-ease);
+}
+
+/* Degradado claro + texto espresso (8.6:1 en el extremo más oscuro).
+ * El degradado marrón con texto blanco al 72% daba 1.6:1 y el rótulo
+ * "Foto editorial" no se leía — y ahora mismo es lo que se ve en toda
+ * la tienda, porque aún no hay fotografía. */
+.star-placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(155deg, #dccdb8 0%, #d3bfa7 52%, #c9b49c 100%);
+  color: var(--star-black);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+/* --- Eyebrow: regla dorada + versalitas legibles --- */
+.star-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--star-mocha-ink);
+}
+
+.star-eyebrow::before {
+  content: '';
+  flex: none;
+  width: 3.2rem;
+  height: 0.1rem;
+  background: var(--star-gold);
+}
+
+/* --- Display: Cormorant con tracking negativo ---
+ * `color: inherit` no es decorativo: Dawn declara el color directamente
+ * sobre h1..h5, así que un <h2 class="star-display"> tomaba el
+ * --color-foreground de la página y rompía la herencia de la banda que
+ * lo contiene. En el banner de fondo espresso eso daba negro sobre
+ * negro, 1:1. Con inherit, cada banda manda sobre su propio texto. */
+.star-display {
+  font-family: var(--star-display);
+  color: inherit;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--star-ls-display);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.star-display em {
+  font-style: italic;
+  color: var(--star-mocha);
+}
+
+.star-prose {
+  font-size: var(--star-fs-body-l);
+  line-height: 1.75;
+  color: var(--star-muted);
+  max-width: 42ch;
+}
+
+.star-prose > * {
+  margin: 0;
+}
+
+/* --- Botón: el relleno sube desde la base al hover --- */
+.star-button {
+  --btn-bg: var(--star-black);
+  --btn-fg: var(--star-cream);
+  --btn-hover-bg: var(--star-mocha);
+  --btn-hover-fg: var(--star-cream);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 5rem;
+  padding: 1.6rem 3.2rem;
+  border: 0.1rem solid var(--btn-bg);
+  border-radius: 0;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color var(--star-fast) var(--star-ease), border-color var(--star-fast) var(--star-ease);
+}
+
+.star-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-hover-bg);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--star-fast) var(--star-ease);
+}
+
+.star-button:hover {
+  color: var(--btn-hover-fg);
+  border-color: var(--btn-hover-bg);
+}
+
+.star-button:hover::before {
+  transform: scaleY(1);
+}
+
+.star-button--outline {
+  --btn-bg: transparent;
+  --btn-fg: var(--star-black);
+  --btn-hover-bg: var(--star-black);
+  border-color: var(--star-black);
+}
+
+.star-button--gold {
+  --btn-bg: var(--star-gold);
+  --btn-fg: var(--star-black);
+  --btn-hover-bg: var(--star-cream);
+  --btn-hover-fg: var(--star-black);
+}
+
+/* --- Link: subrayado que crece desde la izquierda --- */
+.star-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-bottom: 0.7rem;
+  color: var(--star-black);
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 0.1rem solid var(--star-hair);
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 0.1rem;
+  transition: background-size var(--star-fast) var(--star-ease);
+}
+
+.star-link:hover {
+  background-size: 100% 0.1rem;
+}
+
+.star-link svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  transition: transform var(--star-fast) var(--star-ease);
+}
+
+.star-link:hover svg {
+  transform: translateX(0.4rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-media > img,
+  .star-button::before,
+  .star-link,
+  .star-link svg {
+    transition-duration: 1ms;
+  }
+}
+
+/* ============================================================
+ * 1. VARIANT PICKER — TALLAS (pills)
+ *    Cubre los 3 casos de Star Moda con un mismo componente:
+ *    · Letra    XS S M L XL XXL
+ *    · Numérica 1 3 5 7 9 11
+ *    · Única    (un solo pill)
+ *    picker_type = "button" -> .product-form__input.product-form__input--pill
+ * ============================================================ */
+
+/* Dirección "Ledger": cada talla lleva solo una regla inferior; la
+ * seleccionada engrosa la línea a espresso. El contenedor va en flex
+ * para que el gap y la alineación de las reglas funcionen. */
+.product-form__input.product-form__input--pill {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end; /* alinea las reglas inferiores entre sí */
+  gap: 1.4rem;
+}
+
+.product-form__input.product-form__input--pill .form__label {
+  width: 100%; /* la legend "Talla" ocupa su propia línea */
+  font-family: var(--star-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--star-muted);
+  margin-bottom: 1rem;
+}
+
+/* Estado base — regla inferior fina, texto atenuado */
+.product-form__input.product-form__input--pill input[type='radio'] + label {
+  min-width: 3.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1rem 0.8rem 1.2rem; /* área de toque cómoda en móvil */
+  border: 0;
+  border-bottom: 0.2rem solid rgba(28, 27, 26, 0.16);
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--star-muted);
+  font-family: var(--star-body);
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  transition: color var(--star-duration) ease, border-color var(--star-duration) ease;
+}
+
+/* La sombra/pseudo-elemento de Craft no aplica aquí */
+.product-form__input.product-form__input--pill input[type='radio'] + label:before {
+  content: none;
+}
+
+/* Hover — texto espresso, regla mocha */
+.product-form__input.product-form__input--pill input[type='radio']:not(:disabled):not(.disabled) + label:hover {
+  color: var(--star-black);
+  border-bottom-color: var(--star-mocha);
+}
+
+/* Selected — texto espresso en negrita, regla espresso.
+ * background transparent neutraliza el relleno negro que Dawn aplica
+ * en su regla :checked (si no, fondo negro + texto negro = invisible). */
+.product-form__input.product-form__input--pill input[type='radio']:checked + label {
+  background-color: transparent;
+  color: var(--star-black);
+  font-weight: 600;
+  border-bottom-color: var(--star-black);
+}
+
+/* Agotado / no disponible (inventario único de Star Moda) */
+.product-form__input.product-form__input--pill input[type='radio']:disabled + label,
+.product-form__input.product-form__input--pill input[type='radio'].disabled + label {
+  color: rgba(28, 27, 26, 0.28);
+  border-bottom-style: dashed;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Foco accesible — anillo espresso sobre crema */
+.product-form__input.product-form__input--pill input[type='radio']:focus-visible + label,
+.product-form__input.product-form__input--pill input[type='radio'].focused + label {
+  box-shadow: 0 0 0 0.2rem var(--star-cream), 0 0 0 0.35rem var(--star-black);
+}
+
+/* ============================================================
+ * 2. VARIANT PICKER — COLORES (swatch circular)
+ *    swatch_shape = "circle" -> .product-form__input.product-form__input--swatch
+ * ============================================================ */
+
+.product-form__input.product-form__input--swatch {
+  gap: 1rem;
+}
+
+.product-form__input.product-form__input--swatch .swatch-input__input + .swatch-input__label {
+  --swatch-input--size: 3.6rem;
+  margin: 0; /* usa el gap del contenedor */
+}
+
+@media screen and (min-width: 750px) {
+  .product-form__input.product-form__input--swatch .swatch-input__input + .swatch-input__label {
+    --swatch-input--size: 3rem;
+  }
+}
+
+/* Swatch base — borde fino en tono mocha */
+.product-form__input.product-form__input--swatch .swatch {
+  border: 0.1rem solid var(--star-line-hairline);
+}
+
+/* Hover — anillo mocha sutil */
+.product-form__input.product-form__input--swatch
+  .swatch-input__input:not(:disabled)
+  + .swatch-input__label:hover
+  .swatch {
+  box-shadow: 0 0 0 0.2rem var(--star-cream), 0 0 0 0.3rem var(--star-mocha);
+}
+
+/* Selected — anillo espresso con offset (contraste claro) */
+.product-form__input.product-form__input--swatch .swatch-input__input:checked + .swatch-input__label .swatch {
+  box-shadow: 0 0 0 0.2rem var(--star-cream), 0 0 0 0.35rem var(--star-black);
+  border-color: var(--star-black);
+}
+
+/* No disponible — mantiene el dashed de Dawn con tono de marca */
+.product-form__input.product-form__input--swatch .swatch--unavailable {
+  border-color: rgba(28, 27, 26, 0.4);
+}
+
+/* ============================================================
+ * 3. FACETS — FILTROS DE COLECCIÓN (talla / color / categoría)
+ *    Consistencia editorial con el picker.
+ * ============================================================ */
+
+.facets__summary,
+.facets__heading,
+.facet-filters__label {
+  font-family: var(--star-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--star-black);
+}
+
+.facets__summary {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* Checkbox activo del filtro en espresso */
+.facets__list .facet-checkbox input[type='checkbox']:checked ~ .facet-checkbox__text {
+  color: var(--star-black);
+  font-weight: 500;
+}
+
+/* Chip de filtro aplicado — cuadrado, borde fino */
+.active-facets .active-facets__button-inner,
+.active-facets__button {
+  border-radius: 0;
+  border-color: var(--star-line-hairline);
+  letter-spacing: 0.04em;
+}
+
+/* Slider de precio en espresso (price-facet) */
+.price-facet .field__input,
+.facets .field__input {
+  border-radius: 0;
+}
+
+.facets__price .slider__range::-webkit-slider-thumb,
+.mini-cart__range::-webkit-slider-thumb {
+  background: var(--star-black);
+}
+
+/* ============================================================
+ * 4. TOQUES GLOBALES 007 — sin sombras, radius 0 reforzado
+ * ============================================================ */
+
+.card,
+.card-wrapper,
+.media,
+.global-media-settings {
+  box-shadow: none !important;
+  border-radius: 0;
+}

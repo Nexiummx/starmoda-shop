@@ -1,109 +1,228 @@
 {% comment %}
-  Star Moda editorial product card.
+  Star Moda — tarjeta de producto editorial.
 
-  Accepts:
-  - product: Product object
-  - section_id: String
-  - badge_mode: String, "new" or "sale"
+  Acepta:
+  - product     Product. Si viene vacío se renderiza un placeholder con la
+                misma caja, para que la rejilla no colapse mientras la
+                tienda no tenga catálogo cargado.
+  - section_id  String, para ids únicos.
+  - badge_mode  'new' | 'sale'. Sólo inclina el desempate; el estado real
+                del inventario siempre manda.
+
+  Estilos en assets/star-card.css.
 {% endcomment %}
 
-{% liquid
-  assign selected_variant = product.selected_or_first_available_variant
-  assign show_sale = false
-  if selected_variant.compare_at_price > selected_variant.price
-    assign show_sale = true
+{%- liquid
+  assign card_id = section_id | append: '-' | append: product.id
+
+  if product == blank
+    assign is_placeholder = true
   endif
 
-  assign published_seconds = product.published_at | date: '%s' | plus: 0
-  assign now_seconds = 'now' | date: '%s' | plus: 0
-  assign days_since_publish = now_seconds | minus: published_seconds | divided_by: 86400
-  assign show_new = false
-  if days_since_publish < 30
-    assign show_new = true
-  endif
-%}
+  assign variant = product.selected_or_first_available_variant
 
-<a class="star-product-card" href="{{ product.url }}" aria-labelledby="star-card-title-{{ section_id }}-{{ product.id }}">
-  <div class="star-product-card__media">
-    {% if product.featured_media != blank %}
-      {{
-        product.featured_media
-        | image_url: width: 900
-        | image_tag:
-          widths: '360, 540, 720, 900',
-          sizes: '(min-width: 990px) 25vw, 50vw',
-          loading: 'lazy',
-          alt: product.featured_media.alt
-      }}
-    {% else %}
+  assign on_sale = false
+  if variant.compare_at_price > variant.price
+    assign on_sale = true
+    assign discount = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price
+  endif
+
+  comment
+    Etiqueta "Nuevo". La regla por fecha es una trampa al importar el
+    catálogo de golpe: los 250 productos entran el mismo día y salen
+    todos marcados. Por eso la ventana es un ajuste del tema
+    (settings.new_badge_days, 0 = desactivada) y el tag `nuevo` la puede
+    forzar siempre, producto por producto.
+  endcomment
+  assign is_new = false
+  if product.tags contains 'nuevo'
+    assign is_new = true
+  else
+    assign badge_days = settings.new_badge_days | default: 0
+    if badge_days > 0
+      assign published_seconds = product.published_at | date: '%s' | plus: 0
+      assign now_seconds = 'now' | date: '%s' | plus: 0
+      assign days_since_publish = now_seconds | minus: published_seconds | divided_by: 86400
+      if days_since_publish < badge_days
+        assign is_new = true
+      endif
+    endif
+  endif
+
+  assign is_low = false
+  if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny'
+    if variant.inventory_quantity > 0 and variant.inventory_quantity <= 2
+      assign is_low = true
+    endif
+  endif
+
+  assign alt_media = blank
+  if product.media.size > 1
+    assign alt_media = product.media[1]
+  endif
+-%}
+
+{%- if is_placeholder -%}
+  <div class="star-product-card" aria-hidden="true">
+    <div class="star-product-card__media">
       <div class="star-placeholder">Producto</div>
-    {% endif %}
-
-    {% if product.available == false %}
-      <span class="star-product-card__badge">Agotado</span>
-    {% elsif show_sale %}
-      <span class="star-product-card__badge star-product-card__badge--sale">Sale</span>
-    {% elsif badge_mode == 'new' and show_new %}
-      <span class="star-product-card__badge">Nuevo</span>
-    {% elsif selected_variant.inventory_management == 'shopify' and selected_variant.inventory_quantity <= 2 and selected_variant.inventory_quantity > 0 %}
-      <span class="star-product-card__badge">Agotándose</span>
-    {% endif %}
-  </div>
-
-  <h3 class="star-product-card__title" id="star-card-title-{{ section_id }}-{{ product.id }}">
-    {{ product.title | escape }}
-  </h3>
-
-  <div class="star-product-card__meta">
-    {% if product.options_with_values.size > 0 %}
-      {% for option in product.options_with_values limit: 1 %}
-        {% for value in option.values limit: 1 %}
-          {{ value }}
-        {% endfor %}
-        {% if option.values.size > 1 %}
-          <span aria-hidden="true"> · </span>{{ option.values.size }} opciones
-        {% endif %}
-      {% endfor %}
-    {% elsif product.vendor != blank %}
-      {{ product.vendor }}
-    {% else %}
-      Star Moda
-    {% endif %}
-  </div>
-
-  <div class="star-product-card__price">
-    {{ selected_variant.price | money }}
-    {% if show_sale %}
-      <span class="star-product-card__compare">{{ selected_variant.compare_at_price | money }}</span>
-    {% endif %}
-  </div>
-
-  {% for option in product.options_with_values %}
-    {% assign option_name = option.name | downcase %}
-    {% if option_name contains 'color' or option_name contains 'colour' %}
-      <div class="star-swatches" aria-label="Colores disponibles">
-        {% for value in option.values limit: 4 %}
-          {% liquid
-            assign normalized_color = value | downcase
-            assign color_value = '#dccdb8'
-            if normalized_color contains 'negro' or normalized_color contains 'black'
-              assign color_value = '#1c1b1a'
-            elsif normalized_color contains 'blanco' or normalized_color contains 'white' or normalized_color contains 'crema'
-              assign color_value = '#f7f3ee'
-            elsif normalized_color contains 'rosa' or normalized_color contains 'pink' or normalized_color contains 'nude'
-              assign color_value = '#d8b6b6'
-            elsif normalized_color contains 'mocha' or normalized_color contains 'cafe' or normalized_color contains 'café'
-              assign color_value = '#9b7b6c'
-            elsif normalized_color contains 'dorado' or normalized_color contains 'gold'
-              assign color_value = '#d8b16a'
-            elsif normalized_color contains 'beige' or normalized_color contains 'arena'
-              assign color_value = '#dccdb8'
-            endif
-          %}
-          <span class="star-swatch" title="{{ value | escape }}" style="background: {{ color_value }};"></span>
-        {% endfor %}
+    </div>
+    <div class="star-product-card__body">
+      <h3 class="star-product-card__title">Nombre del producto</h3>
+      <span class="star-product-card__meta">Conecta una colección</span>
+      <div class="star-product-card__row">
+        <span class="star-product-card__price">$000</span>
       </div>
-      {% break %}
-    {% endif %}
-  {% endfor %}
-</a>
+    </div>
+  </div>
+{%- else -%}
+  <a
+    class="star-product-card{% if alt_media != blank %} star-product-card--has-alt{% endif %}{% unless product.available %} star-product-card--out{% endunless %}"
+    href="{{ product.url }}"
+    aria-labelledby="star-card-title-{{ card_id }}"
+  >
+    <div class="star-product-card__media">
+      {%- if product.featured_media != blank -%}
+        {{
+          product.featured_media
+          | image_url: width: 1000
+          | image_tag:
+            class: 'star-product-card__main',
+            widths: '360, 540, 720, 1000',
+            sizes: '(min-width: 990px) 24vw, 46vw',
+            loading: 'lazy',
+            alt: product.featured_media.alt
+        }}
+      {%- else -%}
+        <div class="star-placeholder">{{ product.title | escape }}</div>
+      {%- endif -%}
+
+      {%- if alt_media != blank -%}
+        {{
+          alt_media
+          | image_url: width: 1000
+          | image_tag:
+            class: 'star-product-card__alt',
+            widths: '360, 540, 720, 1000',
+            sizes: '(min-width: 990px) 24vw, 46vw',
+            loading: 'lazy',
+            alt: ''
+        }}
+      {%- endif -%}
+
+      {%- comment -%}
+        Un solo badge. Tres etiquetas apiladas compiten entre sí y ninguna
+        se lee: gana el estado que más condiciona la decisión de compra.
+      {%- endcomment -%}
+      {%- if product.available == false -%}
+        <span class="star-product-card__badge star-product-card__badge--out">Agotado</span>
+      {%- elsif on_sale -%}
+        <span class="star-product-card__badge star-product-card__badge--sale">
+          {%- if discount > 0 -%}−{{ discount }}%{%- else -%}Sale{%- endif -%}
+        </span>
+      {%- elsif is_low -%}
+        <span class="star-product-card__badge star-product-card__badge--low">Última pieza</span>
+      {%- elsif badge_mode == 'new' and is_new -%}
+        <span class="star-product-card__badge">Nuevo</span>
+      {%- endif -%}
+
+      {%- if product.available -%}
+        <span class="star-product-card__action" aria-hidden="true">Ver producto</span>
+      {%- endif -%}
+    </div>
+
+    <div class="star-product-card__body">
+      <h3 class="star-product-card__title" id="star-card-title-{{ card_id }}">
+        {{- product.title | escape -}}
+      </h3>
+
+      {%- liquid
+        assign meta = ''
+        for option in product.options_with_values
+          assign option_name = option.name | downcase
+          if option_name contains 'talla' or option_name contains 'size'
+            assign meta = option.values | join: ' · '
+            break
+          endif
+        endfor
+        if meta == blank and product.vendor != blank
+          assign meta = product.vendor
+        endif
+      -%}
+      {%- if meta != blank -%}
+        <span class="star-product-card__meta">{{ meta }}</span>
+      {%- endif -%}
+
+      <div class="star-product-card__row">
+        <span class="star-product-card__price">
+          {{- variant.price | money -}}
+          {%- if on_sale -%}
+            <span class="star-product-card__compare">{{ variant.compare_at_price | money }}</span>
+          {%- endif -%}
+        </span>
+
+        {%- for option in product.options_with_values -%}
+          {%- assign option_name = option.name | downcase -%}
+          {%- if option_name contains 'color' or option_name contains 'colour' -%}
+            <span class="star-swatches" aria-label="{{ option.values.size }} colores disponibles">
+              {%- for value in option.values limit: 4 -%}
+                {%- liquid
+                  comment
+                    Si la opción tiene swatch nativo configurado en el admin
+                    (Opciones -> valores -> color o imagen), ese manda: es el
+                    dato real de la prenda. El mapa de abajo es sólo el
+                    respaldo mientras no estén configurados, y cubre nada más
+                    el vocabulario cerrado del instructivo; cualquier otro
+                    nombre cae a beige sin avisar.
+                  endcomment
+                  assign color_value = blank
+
+                  if value.swatch.color
+                    assign color_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+                  elsif value.swatch.image
+                    assign swatch_src = value.swatch.image | image_url: width: 40
+                    assign color_value = 'url(' | append: swatch_src | append: ')'
+                  endif
+
+                  if color_value == blank
+                    assign normalized_color = value | downcase
+                    assign color_value = '#dccdb8'
+
+                    if normalized_color contains 'negro' or normalized_color contains 'black'
+                      assign color_value = '#1c1b1a'
+                    elsif normalized_color contains 'blanco' or normalized_color contains 'white' or normalized_color contains 'crema'
+                      assign color_value = '#f7f3ee'
+                    elsif normalized_color contains 'rosa' or normalized_color contains 'pink' or normalized_color contains 'nude'
+                      assign color_value = '#d8b6b6'
+                    elsif normalized_color contains 'mocha' or normalized_color contains 'cafe' or normalized_color contains 'café' or normalized_color contains 'chocolate'
+                      assign color_value = '#9b7b6c'
+                    elsif normalized_color contains 'dorado' or normalized_color contains 'gold' or normalized_color contains 'mostaza'
+                      assign color_value = '#d8b16a'
+                    elsif normalized_color contains 'beige' or normalized_color contains 'arena' or normalized_color contains 'hueso'
+                      assign color_value = '#dccdb8'
+                    elsif normalized_color contains 'azul' or normalized_color contains 'denim' or normalized_color contains 'blue'
+                      assign color_value = '#5b6b7d'
+                    elsif normalized_color contains 'verde' or normalized_color contains 'olivo' or normalized_color contains 'green'
+                      assign color_value = '#6f7358'
+                    elsif normalized_color contains 'vino' or normalized_color contains 'rojo' or normalized_color contains 'red'
+                      assign color_value = '#8a3b3b'
+                    endif
+                  endif
+                -%}
+                <span
+                  class="star-swatch"
+                  title="{{ value | escape }}"
+                  style="--star-swatch-value: {{ color_value }};"
+                ></span>
+              {%- endfor -%}
+              {%- if option.values.size > 4 -%}
+                <span class="star-swatches__more">+{{ option.values.size | minus: 4 }}</span>
+              {%- endif -%}
+            </span>
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </a>
+{%- endif -%}

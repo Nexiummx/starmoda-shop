@@ -1,23 +1,79 @@
-<style type="text/css">
-  .template-404 .title + * {
-    margin-top: 1rem;
-  }
+{%- comment -%}
+  Star Moda — página 404.
 
-  @media screen and (min-width: 750px) {
-    .template-404 .title + * {
-      margin-top: 2rem;
-    }
-  }
-</style>
+  Dawn resuelve el 404 como un callejón sin salida centrado: subtexto,
+  título y un botón. Aquí es una salida: el número grande en beige como
+  elemento gráfico, y dos rutas reales (catálogo y novedades) en vez de
+  una sola. Los textos son editables desde el editor de temas.
+{%- endcomment -%}
 
-<div class="template-404 page-width page-margin center">
-  <p>
-    {{ 'templates.404.subtext' | t }}
-  </p>
-  <h1 class="title">
-    {{ 'templates.404.title' | t }}
-  </h1>
-  <a href="{{ routes.all_products_collection_url }}" class="button">
-    {{ 'general.continue_shopping' | t }}
-  </a>
+<div class="template-404 page-width">
+  <div class="star-404">
+    <span class="star-404__code" aria-hidden="true">404</span>
+
+    <h1 class="star-404__title">
+      {{ section.settings.heading | default: 'Esta página ya no está.' }}
+    </h1>
+
+    {%- if section.settings.text != blank -%}
+      <p class="star-404__text">{{ section.settings.text }}</p>
+    {%- endif -%}
+
+    <div class="star-404__actions">
+      <a
+        class="star-button"
+        href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+      >
+        {{ section.settings.button_label | default: 'Ver todo el catálogo' }}
+      </a>
+
+      {%- if section.settings.secondary_label != blank -%}
+        <a class="star-link" href="{{ section.settings.secondary_link | default: routes.root_url }}">
+          {{ section.settings.secondary_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
 </div>
+
+{% schema %}
+{
+  "name": "Página 404",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Esta página ya no está.",
+      "label": "Título"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "default": "Puede que la prenda se haya agotado o que el enlace haya cambiado. Te dejamos por dónde seguir.",
+      "label": "Texto"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Ver todo el catálogo",
+      "label": "Botón principal"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón principal"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "default": "Volver al inicio",
+      "label": "Enlace secundario"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Destino del enlace secundario"
+    }
+  ]
+}
+{% endschema %}

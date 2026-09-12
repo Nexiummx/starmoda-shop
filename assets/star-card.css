@@ -1,0 +1,423 @@
+/*
+ * star-card.css — Tarjeta de producto Star Moda
+ * ===============================================================
+ * Depende de los tokens y primitivas de star-moda.css.
+ *
+ * Dos familias de selectores, UN solo diseño:
+ *   · .star-product-card      markup propio, usado en la home
+ *   · .product-card-wrapper   markup de Dawn, usado por colección, búsqueda,
+ *                             relacionados, featured-collection y collage
+ *
+ * No se reescribió card-product.liquid (648 líneas con toda la maquinaria de
+ * quick-add que usan 6 secciones). Se alinea por CSS: mismo objeto visual,
+ * cero riesgo sobre el JS de Dawn.
+ *
+ * Badges: el fondo mocha con texto crema del diseño anterior daba 3.5:1
+ * y no pasaba AA en 9px. Cada variante aquí supera 8:1 usando colores
+ * que ya están en la paleta — el rosa nude entra como color de rebaja.
+ */
+
+.star-product-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+/* ---------- Media ---------- */
+
+.star-product-card__media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--star-beige);
+}
+
+.star-product-card__media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--star-slow) var(--star-ease), opacity var(--star-fast) var(--star-ease);
+}
+
+/* Segunda foto: se revela por opacidad, no por display, para que el
+ * navegador no reflowee en el hover. */
+.star-product-card__alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.star-product-card:hover .star-product-card__media > img,
+.star-product-card:focus-visible .star-product-card__media > img {
+  transform: scale(1.04);
+}
+
+.star-product-card:hover .star-product-card__alt,
+.star-product-card:focus-visible .star-product-card__alt {
+  opacity: 1;
+}
+
+.star-product-card--has-alt:hover .star-product-card__main,
+.star-product-card--has-alt:focus-visible .star-product-card__main {
+  opacity: 0;
+}
+
+/* ---------- Badge ---------- */
+
+.star-product-card__badge {
+  position: absolute;
+  z-index: 2;
+  top: 1.2rem;
+  left: 1.2rem;
+  padding: 0.6rem 1rem;
+  background: var(--star-cream);
+  color: var(--star-black);
+  border: 0.1rem solid rgba(28, 27, 26, 0.14);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.star-product-card__badge--sale {
+  background: var(--star-rose);
+  border-color: transparent;
+}
+
+.star-product-card__badge--low {
+  background: var(--star-gold);
+  border-color: transparent;
+}
+
+.star-product-card__badge--out {
+  background: var(--star-black);
+  color: var(--star-cream);
+  border-color: transparent;
+}
+
+/* ---------- Barra de acción ---------- */
+
+.star-product-card__action {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.4rem;
+  background: rgba(28, 27, 26, 0.88);
+  color: var(--star-cream);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity var(--star-fast) var(--star-ease), transform var(--star-fast) var(--star-ease);
+}
+
+.star-product-card:hover .star-product-card__action,
+.star-product-card:focus-visible .star-product-card__action {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Sin hover (táctil) la barra no aporta y tapa la foto */
+@media (hover: none) {
+  .star-product-card__action {
+    display: none;
+  }
+}
+
+/* ---------- Cuerpo ---------- */
+
+.star-product-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 1.6rem;
+}
+
+.star-product-card__title {
+  font-family: var(--star-display);
+  font-weight: 400;
+  font-size: 1.9rem;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.star-product-card__meta {
+  color: var(--star-muted);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.star-product-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-top: 0.4rem;
+}
+
+.star-product-card__price {
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.star-product-card__compare {
+  margin-left: 0.8rem;
+  color: var(--star-muted);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+.star-product-card--out .star-product-card__price {
+  color: var(--star-muted);
+}
+
+/* ---------- Swatches ---------- */
+
+.star-swatches {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
+}
+
+/* El valor llega por custom property, no por `style="background: …"`.
+ * El shorthand resetea background-size, así que un swatch nativo de
+ * imagen (estampado, textura) perdía el `cover` en cuanto se pintaba
+ * inline. Con la variable, los longhands de abajo siempre ganan. */
+.star-swatch {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  border: 0.1rem solid rgba(28, 27, 26, 0.22);
+  background: var(--star-swatch-value, var(--star-beige));
+  background-size: cover;
+  background-position: center;
+}
+
+.star-swatches__more {
+  color: var(--star-muted);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-product-card__media > img,
+  .star-product-card__action {
+    transition-duration: 1ms;
+  }
+}
+
+/* ==================================================================
+ * DAWN — misma tarjeta sobre el markup de card-product.liquid
+ *
+ * Los colores de badge NO se fijan aquí: se resuelven con los esquemas
+ * de color del tema (settings_data.json), que ya contienen la paleta.
+ * Aquí sólo va geometría y tipografía.
+ * ================================================================== */
+
+/* Proporción 3:4. Dawn la fija con --ratio-percent en el atributo style,
+ * por eso hace falta !important para ganarle a un valor inline. */
+.product-card-wrapper .card__inner {
+  --ratio-percent: 133.333% !important;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--star-beige);
+}
+
+.product-card-wrapper .card {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.product-card-wrapper .card__media {
+  margin: 0;
+  width: 100%;
+}
+
+.product-card-wrapper .card__media img,
+.product-card-wrapper .card .media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--star-slow) var(--star-ease), opacity var(--star-fast) var(--star-ease);
+}
+
+.product-card-wrapper .card:hover .card__media img {
+  transform: scale(1.04);
+}
+
+/* Segunda foto: Dawn la desliza; aquí se funde, igual que en la home */
+@media (hover: hover) {
+  .product-card-wrapper .media--hover-effect > img + img {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: none;
+    transition: opacity var(--star-fast) var(--star-ease);
+  }
+
+  .product-card-wrapper .card:hover .media--hover-effect > img + img {
+    opacity: 1;
+    transform: none;
+  }
+
+  .product-card-wrapper .card:hover .media--hover-effect > img:first-child:not(:only-child) {
+    opacity: 0;
+  }
+}
+
+/* ---------- Cuerpo ---------- */
+
+.product-card-wrapper .card__content {
+  display: block;
+  padding: 1.6rem 0 0;
+}
+
+.product-card-wrapper .card__information {
+  padding: 0;
+}
+
+.product-card-wrapper .card__heading {
+  font-family: var(--star-display);
+  font-weight: 400;
+  font-size: 1.9rem;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin: 0 0 0.6rem;
+}
+
+.product-card-wrapper .card__heading a {
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+.product-card-wrapper .card__heading a::after {
+  /* Dawn extiende un ::after invisible sobre toda la tarjeta para hacerla
+   * clicable. Se conserva; sólo se le quita el subrayado heredado. */
+  text-decoration: none;
+}
+
+.product-card-wrapper .card-information {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-top: 0.4rem;
+}
+
+.product-card-wrapper .caption-with-letter-spacing {
+  color: var(--star-muted);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- Precio ---------- */
+
+.product-card-wrapper .price {
+  font-size: 1.35rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--star-black);
+}
+
+.product-card-wrapper .price .price-item {
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+/* Dawn imprime el precio tachado ANTES del rebajado, así que un
+ * margin-left sobre el tachado no los separaba: quedaban "$399.00$249.00".
+ * El gap del contenedor los separa vengan en el orden que vengan. */
+.product-card-wrapper .price__sale {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+
+.product-card-wrapper .price__sale .price-item--regular {
+  margin-left: 0;
+  color: var(--star-muted);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+.product-card-wrapper .price--on-sale .price-item--sale {
+  color: var(--star-black);
+}
+
+.product-card-wrapper .price__badge-sale,
+.product-card-wrapper .price__badge-sold-out {
+  display: none; /* el estado ya lo comunica el badge sobre la foto */
+}
+
+/* ---------- Badge ---------- */
+
+.product-card-wrapper .card__badge {
+  z-index: 2;
+}
+
+.product-card-wrapper .card__badge .badge {
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 0;
+  font-family: var(--star-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* ---------- Quick add (si se reactiva en el editor) ---------- */
+
+.product-card-wrapper .quick-add {
+  margin-top: 1.4rem;
+}
+
+.product-card-wrapper .quick-add__submit {
+  min-height: 4.4rem;
+  border-radius: 0;
+  border: 0.1rem solid var(--star-black);
+  background: transparent;
+  color: var(--star-black);
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: background var(--star-fast) var(--star-ease), color var(--star-fast) var(--star-ease);
+}
+
+.product-card-wrapper .quick-add__submit:hover {
+  background: var(--star-black);
+  color: var(--star-cream);
+}
+
+/* Dawn pinta placeholders con su propio gris; se alinean a la paleta */
+.product-card-wrapper .card--standard .placeholder-svg,
+.product-card-wrapper .placeholder-svg {
+  background: var(--star-beige);
+  fill: rgba(28, 27, 26, 0.18);
+}

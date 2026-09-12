@@ -260,6 +260,158 @@
                     </div>
                   </details>
                 </div>
+              {%- when 'star_size_guide' -%}
+                {%- liquid
+                  assign guide_image = product.metafields.custom.size_guide.value
+                  if guide_image == blank
+                    assign guide_image = block.settings.fallback_image
+                  endif
+                  comment
+                    La nota es de tienda ("las medidas son aproximadas"), no del
+                    producto: las medidas por talla viven en custom.measurements y
+                    las imprime el bloque de ficha técnica. Si se leyeran las dos
+                    aquí, el mismo texto saldría dos veces en la misma página.
+                  endcomment
+                  assign guide_note = block.settings.note
+                  assign guide_label = block.settings.label | default: 'Guía de tallas'
+                -%}
+                {%- comment -%}
+                  Sólo con imagen. Un enlace "Guía de tallas" que se abre y
+                  muestra únicamente la nota ("las medidas son aproximadas")
+                  promete una tabla y entrega un descargo.
+                {%- endcomment -%}
+                {%- if guide_image != blank -%}
+                  <details class="star-size-guide quick-add-hidden" {{ block.shopify_attributes }}>
+                    <summary class="star-size-guide__trigger">
+                      {{- 'icon-ruler.svg' | inline_asset_content -}}
+                      {{ guide_label }}
+                    </summary>
+                    <div class="star-size-guide__panel">
+                      {%- if guide_image != blank -%}
+                        {{
+                          guide_image
+                          | image_url: width: 1200
+                          | image_tag:
+                            widths: '400, 600, 900, 1200',
+                            sizes: '(min-width: 990px) 40vw, 90vw',
+                            loading: 'lazy',
+                            alt: guide_label
+                        }}
+                      {%- endif -%}
+                      {%- if guide_note != blank -%}
+                        <p class="star-size-guide__note">{{ guide_note }}</p>
+                      {%- endif -%}
+                    </div>
+                  </details>
+                {%- elsif request.design_mode -%}
+                  <p class="star-size-guide__empty">
+                    Guía de tallas: sin imagen. Sube una en el metacampo
+                    <code>custom.size_guide</code> del producto, o una por defecto en los
+                    ajustes de este bloque.
+                  </p>
+                {%- endif -%}
+              {%- when 'star_specs' -%}
+                {%- liquid
+                  comment
+                    Ficha técnica. Cada fila sale de un metafield del namespace
+                    `custom` (ver STARMODA-INSTRUCTIVO-CONTENIDO.md, anexo A).
+                    Las filas vacías no se imprimen y, si no hay ninguna, el
+                    acordeón entero desaparece: es preferible a un desplegable
+                    que se abre en blanco.
+                  endcomment
+                  assign mf = product.metafields.custom
+                  assign spec_material = mf.material.value
+                  assign spec_fit = mf.fit.value
+                  assign spec_measurements = mf.measurements.value
+                  assign spec_model = mf.model_info.value
+                  assign spec_origin = mf.origin.value
+                  assign spec_care = mf.care_instructions.value
+
+                  assign has_specs = false
+                  if spec_material != blank or spec_fit != blank or spec_measurements != blank
+                    assign has_specs = true
+                  endif
+                  if spec_model != blank or spec_origin != blank or spec_care != blank
+                    assign has_specs = true
+                  endif
+                -%}
+                {%- if has_specs -%}
+                  <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
+                    <details id="Details-{{ block.id }}-{{ section.id }}" {% if block.settings.open_by_default %}open{% endif %}>
+                      <summary>
+                        <div class="summary__title">
+                          {% render 'icon-accordion', icon: block.settings.icon %}
+                          <h2 class="h4 accordion__title">
+                            {{ block.settings.heading | default: 'Ficha técnica' | escape }}
+                          </h2>
+                        </div>
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </summary>
+                      <div class="accordion__content" id="ProductAccordion-{{ block.id }}-{{ section.id }}">
+                        <dl class="star-specs">
+                          {%- if spec_material != blank -%}
+                            <div class="star-specs__row">
+                              <dt class="star-specs__term">Material</dt>
+                              <dd class="star-specs__value">{{ spec_material }}</dd>
+                            </div>
+                          {%- endif -%}
+                          {%- if spec_fit != blank -%}
+                            <div class="star-specs__row">
+                              <dt class="star-specs__term">Corte</dt>
+                              <dd class="star-specs__value">{{ spec_fit }}</dd>
+                            </div>
+                          {%- endif -%}
+                          {%- if spec_measurements != blank -%}
+                            <div class="star-specs__row">
+                              <dt class="star-specs__term">Medidas</dt>
+                              <dd class="star-specs__value">{{ spec_measurements }}</dd>
+                            </div>
+                          {%- endif -%}
+                          {%- if spec_model != blank -%}
+                            <div class="star-specs__row">
+                              <dt class="star-specs__term">La modelo</dt>
+                              <dd class="star-specs__value">{{ spec_model }}</dd>
+                            </div>
+                          {%- endif -%}
+                          {%- if spec_care != blank -%}
+                            <div class="star-specs__row">
+                              <dt class="star-specs__term">Cuidados</dt>
+                              <dd class="star-specs__value">{{ spec_care }}</dd>
+                            </div>
+                          {%- endif -%}
+                          {%- if spec_origin != blank -%}
+                            <div class="star-specs__row">
+                              <dt class="star-specs__term">Origen</dt>
+                              <dd class="star-specs__value">{{ spec_origin }}</dd>
+                            </div>
+                          {%- endif -%}
+                        </dl>
+                      </div>
+                    </details>
+                  </div>
+                {%- elsif request.design_mode -%}
+                  <div class="product__accordion accordion">
+                    <details>
+                      <summary>
+                        <div class="summary__title">
+                          <h2 class="h4 accordion__title">
+                            {{ block.settings.heading | default: 'Ficha técnica' | escape }} — sin datos
+                          </h2>
+                        </div>
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </summary>
+                      <div class="accordion__content">
+                        <p>
+                          Este bloque se llena solo con los metacampos
+                          <code>custom.material</code>, <code>custom.fit</code>,
+                          <code>custom.measurements</code>, <code>custom.model_info</code>,
+                          <code>custom.care_instructions</code> y <code>custom.origin</code>.
+                          Mientras estén vacíos, el bloque no se muestra en la tienda.
+                        </p>
+                      </div>
+                    </details>
+                  </div>
+                {%- endif -%}
               {%- when 'quantity_selector' -%}
                 <div
                   id="Quantity-Form-{{ section.id }}"
@@ -988,6 +1140,72 @@
           "id": "custom_liquid",
           "label": "t:sections.custom-liquid.settings.custom_liquid.label",
           "info": "t:sections.custom-liquid.settings.custom_liquid.info"
+        }
+      ]
+    },
+    {
+      "type": "star_specs",
+      "name": "Ficha técnica",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Se llena sola con los metacampos del producto: custom.material, custom.fit, custom.measurements, custom.model_info, custom.care_instructions y custom.origin. Si todos están vacíos, el bloque no se muestra en la tienda."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Ficha técnica",
+          "label": "Título"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "options": [
+            { "value": "none", "label": "Ninguno" },
+            { "value": "shirt", "label": "Prenda" },
+            { "value": "leaf", "label": "Hoja" },
+            { "value": "washing", "label": "Lavado" },
+            { "value": "iron", "label": "Plancha" },
+            { "value": "ruler", "label": "Regla" },
+            { "value": "info", "label": "Información" }
+          ],
+          "default": "shirt",
+          "label": "Icono"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "default": false,
+          "label": "Abrir por defecto"
+        }
+      ]
+    },
+    {
+      "type": "star_size_guide",
+      "name": "Guía de tallas",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Usa la imagen del metacampo custom.size_guide del producto. Si el producto no tiene, usa la imagen por defecto de aquí abajo. Colócalo justo debajo del selector de talla."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "default": "Guía de tallas",
+          "label": "Texto del enlace"
+        },
+        {
+          "type": "image_picker",
+          "id": "fallback_image",
+          "label": "Imagen por defecto (toda la tienda)"
+        },
+        {
+          "type": "textarea",
+          "id": "note",
+          "label": "Nota bajo la tabla",
+          "info": "Texto fijo para toda la tienda. Las medidas por talla de cada prenda van en el metacampo custom.measurements y salen en la ficha técnica."
         }
       ]
     },

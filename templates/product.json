@@ -24,11 +24,26 @@
           "type": "price",
           "settings": {}
         },
+        "inventory": {
+          "type": "inventory",
+          "settings": {
+            "text_style": "uppercase",
+            "inventory_threshold": 3,
+            "show_inventory_quantity": false
+          }
+        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
             "picker_type": "button",
             "swatch_shape": "circle"
+          }
+        },
+        "size_guide": {
+          "type": "star_size_guide",
+          "settings": {
+            "label": "Guía de tallas",
+            "note": "Las medidas son aproximadas y pueden variar hasta 2 cm entre prendas."
           }
         },
         "buy_buttons": {
@@ -42,13 +57,12 @@
           "type": "description",
           "settings": {}
         },
-        "tab_sizes": {
-          "type": "collapsible_tab",
+        "specs": {
+          "type": "star_specs",
           "settings": {
-            "heading": "Tallas y medidas",
-            "icon": "ruler",
-            "content": "",
-            "page": ""
+            "heading": "Ficha técnica",
+            "icon": "shirt",
+            "open_by_default": false
           }
         },
         "tab_shipping": {
@@ -59,27 +73,19 @@
             "content": "<p>Enviamos a todo México. Tiempo estimado de entrega: 3 a 7 días hábiles.</p>",
             "page": ""
           }
-        },
-        "tab_care": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Material y cuidados",
-            "icon": "washing",
-            "content": "",
-            "page": ""
-          }
         }
       },
       "block_order": [
         "judge_me_reviews_preview_badge_yeWcf7",
         "title",
         "price",
+        "inventory",
         "variant_picker",
+        "size_guide",
         "buy_buttons",
         "description",
-        "tab_sizes",
-        "tab_shipping",
-        "tab_care"
+        "specs",
+        "tab_shipping"
       ],
       "settings": {
         "enable_sticky_info": true,
@@ -90,7 +96,7 @@
         "gallery_layout": "thumbnail",
         "mobile_thumbnails": "hide",
         "media_position": "left",
-        "image_zoom": "none",
+        "image_zoom": "lightbox",
         "hide_variants": true,
         "enable_video_looping": false,
         "padding_top": 36,

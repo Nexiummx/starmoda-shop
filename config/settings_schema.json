@@ -1267,6 +1267,30 @@
     ]
   },
   {
+    "name": "Star Moda",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Etiqueta “Nuevo”"
+      },
+      {
+        "type": "paragraph",
+        "content": "La etiqueta sale sola en los productos publicados hace menos de X días. Al importar el catálogo completo de golpe, todos quedarían marcados como nuevos: pon 0 durante la carga y súbelo a 30 cuando la tienda ya esté viva. La etiqueta de producto `nuevo` siempre manda, sin importar este valor."
+      },
+      {
+        "type": "range",
+        "id": "new_badge_days",
+        "min": 0,
+        "max": 60,
+        "step": 5,
+        "unit": "d",
+        "default": 30,
+        "label": "Ventana de “Nuevo”",
+        "info": "0 desactiva la regla por fecha."
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.brand_information.name",
     "settings": [
       {

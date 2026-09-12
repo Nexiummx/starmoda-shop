@@ -1,0 +1,810 @@
+/*
+ * star-pages.css — Carrito, páginas estáticas, 404, blog y cuenta
+ * ===============================================================
+ * Se carga en request.page_type: cart | page | 404 | article | blog |
+ * customers/* (ver layout/theme.liquid). Depende de star-moda.css.
+ *
+ * Son las páginas donde Dawn se nota más: cajas grises, botones con
+ * sombra, títulos centrados en Inter. Ninguna necesita markup nuevo —
+ * todas son el mismo sistema editorial aplicado a otro contenido.
+ */
+
+/* ==================================================================
+ * 1. TIPOGRAFÍA COMÚN DE SECCIONES DE CONTENIDO
+ *    Dawn escribe los titulares con .title / .h0-.h4 en la fuente de
+ *    cuerpo. En Star Moda todo titular es Cormorant.
+ * ================================================================== */
+
+.rich-text__heading,
+.multicolumn .title,
+.title-wrapper .title,
+.contact .title,
+.customer__title,
+.main-page-title,
+.article-template__title,
+.blog__title,
+.newsletter__heading,
+.banner__heading {
+  font-family: var(--star-display);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: var(--star-ls-display);
+  text-transform: none;
+  color: rgb(var(--color-foreground));
+}
+
+.rich-text__heading,
+.main-page-title,
+.article-template__title,
+.customer__title,
+.blog__title {
+  font-size: var(--star-fs-display-m);
+  margin-bottom: clamp(2rem, 2.5vw, 3.2rem);
+}
+
+.multicolumn .title,
+.newsletter__heading,
+.contact .title {
+  font-size: var(--star-fs-display-s);
+}
+
+/* Caption / subtítulo: versalitas mocha, como el eyebrow de la home */
+.rich-text__caption.caption-with-letter-spacing,
+.rich-text__caption.subtitle,
+.banner__text.caption-with-letter-spacing {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--star-mocha-ink);
+}
+
+/* Cuerpo de texto */
+.rich-text__text,
+.multicolumn-card__info .rte,
+.article-template__content,
+.main-page-content .rte,
+.banner__text {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-body-l);
+  line-height: 1.8;
+}
+
+.rich-text__text {
+  max-width: 62ch;
+}
+
+/* ---------- Botones de sección ---------- */
+
+.button,
+.shopify-challenge__button,
+.customer button,
+.shopify-payment-button__button--unbranded {
+  min-height: 5rem;
+  border: 0.1rem solid rgb(var(--color-button));
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+/* Dawn no dibuja el borde del botón con `border`: lo simula con un
+ * box-shadow sobre ::after y un relleno sobre ::before. Los dos traen el
+ * radio y la sombra del tema. Aquí el borde es real, así que los
+ * pseudo-elementos sobran — pero hay que devolverle el contorno a los
+ * botones secundarios, que sin ::after se quedaban en texto suelto. */
+.button:after,
+.button:before,
+.shopify-challenge__button:after,
+.shopify-challenge__button:before,
+.customer button:after,
+.customer button:before,
+.shopify-payment-button__button--unbranded:after,
+.shopify-payment-button__button--unbranded:before {
+  content: none;
+}
+
+.button--secondary,
+.button--tertiary {
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  border-color: rgba(var(--color-foreground), 0.42);
+  transition: background var(--star-fast) var(--star-ease), color var(--star-fast) var(--star-ease),
+    border-color var(--star-fast) var(--star-ease);
+}
+
+.button--secondary:hover,
+.button--tertiary:hover {
+  background: rgb(var(--color-foreground));
+  border-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+/* ==================================================================
+ * 2. CARRITO
+ * ================================================================== */
+
+/* A sangre, mismo canal que la home. Dawn envuelve el carrito en un
+ * .page-width sin clase propia: se identifica por lo que contiene.
+ * Sin soporte de :has() la regla se ignora y queda el ancho del tema. */
+#main-cart-footer > .page-width,
+#MainContent .page-width:has(#main-cart-items),
+#MainContent .page-width:has(.cart__contents) {
+  max-width: none;
+  padding-inline: var(--star-gutter);
+}
+
+.cart__empty-text {
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-m);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: var(--star-ls-display);
+  color: var(--star-black);
+}
+
+.is-empty .cart__warnings {
+  padding-block: clamp(6.4rem, 8vw, 11rem);
+}
+
+.cart__login-title {
+  margin-top: 3.2rem;
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-s);
+  font-weight: 400;
+  letter-spacing: var(--star-ls-display);
+}
+
+.cart__login-paragraph {
+  color: var(--star-muted);
+  font-size: 1.4rem;
+}
+
+/* ---------- Cabecera de la tabla ---------- */
+
+.cart-items thead th,
+.cart-items__heading {
+  padding-bottom: 1.6rem;
+  border-bottom: 0.1rem solid var(--star-hair);
+  font-family: var(--star-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  color: var(--star-muted);
+}
+
+.cart-items th {
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+/* ---------- Línea de producto ---------- */
+
+.cart-item {
+  padding-block: clamp(2rem, 2.5vw, 3.2rem);
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+.cart-item td {
+  padding-top: 0;
+}
+
+.cart-item__image-container,
+.cart-item__image {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--star-beige);
+}
+
+.cart-item__image {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.cart-item__media {
+  width: 10rem;
+}
+
+.cart-item__name,
+.cart-item__name.h4 {
+  font-family: var(--star-display);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+.cart-item__name:hover {
+  color: var(--star-mocha-ink);
+  text-decoration: none;
+}
+
+/* Variante (color · talla) */
+.cart-item .product-option,
+.cart-item__details dl,
+.cart-item .product-option dt,
+.cart-item .product-option dd {
+  font-family: var(--star-body);
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: var(--star-muted);
+}
+
+.cart-item__details .product-option:first-of-type {
+  margin-top: 0.6rem;
+}
+
+.cart-item__price-wrapper,
+.cart-item__totals .price,
+.cart-item .price {
+  font-family: var(--star-body);
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--star-black);
+}
+
+.cart-item__old-price {
+  color: var(--star-muted);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+.cart-item__discounted-prices .cart-item__discounted-price {
+  color: var(--star-black);
+}
+
+/* Cantidad: filete, igual que en la ficha */
+.cart-item .quantity {
+  width: 11rem;
+  min-height: 4.4rem;
+  border: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+}
+
+.cart-item .quantity:after {
+  content: none;
+}
+
+.cart-item .quantity__input {
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.cart-item .quantity__button {
+  color: var(--star-black);
+}
+
+.cart-remove-button .button,
+.cart-item__quantity-wrapper cart-remove-button .button {
+  min-height: 0;
+  padding: 0.6rem;
+  border: 0;
+  background: transparent;
+  color: var(--star-muted);
+  box-shadow: none;
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+/* Lleva .button--tertiary, así que hay que neutralizar también el relleno
+ * que ese modificador aplica en hover: es un icono, no un botón sólido. */
+.cart-remove-button .button:hover {
+  background: transparent;
+  border-color: transparent;
+  color: var(--star-black);
+}
+
+.cart-item__error-text {
+  color: #8a3b3b;
+  font-size: 1.2rem;
+}
+
+/* ---------- Nota y totales ---------- */
+
+.cart__footer {
+  padding-top: clamp(2.4rem, 3vw, 4rem);
+}
+
+.cart__blocks {
+  gap: clamp(2.4rem, 3vw, 4rem);
+}
+
+.cart__note .field__input,
+.cart__note .text-area {
+  border: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--star-body);
+  font-size: 1.4rem;
+}
+
+.cart__note .field__label {
+  font-family: var(--star-body);
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: var(--star-muted);
+}
+
+.totals {
+  padding-top: 2rem;
+  border-top: 0.1rem solid var(--star-hair);
+  justify-content: space-between;
+}
+
+.totals__total,
+.totals__subtotal {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  color: var(--star-muted);
+}
+
+.totals__total-value,
+.totals__subtotal-value {
+  font-family: var(--star-body);
+  font-size: 2rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--star-black);
+}
+
+.tax-note {
+  margin-top: 1rem;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--star-muted);
+}
+
+.cart__ctas {
+  margin-top: 1.6rem;
+}
+
+.cart__checkout-button {
+  min-height: 5.6rem;
+  border: 0.1rem solid var(--star-black);
+  border-radius: 0;
+  background: var(--star-black);
+  color: var(--star-cream);
+  box-shadow: none;
+  transition: background var(--star-fast) var(--star-ease), border-color var(--star-fast) var(--star-ease);
+}
+
+.cart__checkout-button:not([disabled]):hover {
+  background: var(--star-mocha);
+  border-color: var(--star-mocha);
+}
+
+.cart__dynamic-checkout-buttons {
+  margin-top: 1.2rem;
+}
+
+/* ==================================================================
+ * 3. PÁGINAS ESTÁTICAS (Nosotros, Envíos, Devoluciones…)
+ * ================================================================== */
+
+.main-page-title {
+  position: relative;
+  padding-top: clamp(4.8rem, 6vw, 8rem);
+  text-align: left;
+}
+
+.main-page-title::before {
+  content: '';
+  display: block;
+  width: 3.2rem;
+  height: 0.1rem;
+  margin-bottom: 2.4rem;
+  background: var(--star-gold);
+}
+
+.main-page-content {
+  padding-bottom: clamp(4.8rem, 6vw, 8rem);
+}
+
+.main-page-content .rte {
+  max-width: 68ch;
+  color: var(--star-muted);
+}
+
+.main-page-content .rte h2,
+.article-template__content h2,
+.rich-text__text h2 {
+  margin-top: 3.2rem;
+  font-family: var(--star-display);
+  font-size: clamp(2.4rem, 2.6vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--star-black);
+}
+
+.main-page-content .rte h3,
+.article-template__content h3 {
+  margin-top: 2.4rem;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  color: var(--star-black);
+}
+
+.main-page-content .rte a,
+.article-template__content a,
+.rich-text__text a {
+  color: var(--star-black);
+  text-decoration-thickness: 0.1rem;
+  text-underline-offset: 0.4rem;
+}
+
+/* ---------- Banner superior de página ---------- */
+
+.banner__box {
+  padding: clamp(2.4rem, 3vw, 4rem);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.banner__heading {
+  font-size: var(--star-fs-display-l);
+}
+
+.banner__media img {
+  object-fit: cover;
+}
+
+/* ---------- Multicolumna (valores de marca) ---------- */
+
+.multicolumn-list__item {
+  padding: 0;
+}
+
+.multicolumn-card {
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.multicolumn-card__image-wrapper {
+  border-radius: 0;
+}
+
+.multicolumn-card__info {
+  padding: 0;
+}
+
+.multicolumn-card__info h3,
+.multicolumn-card__info .h3 {
+  margin-bottom: 1rem;
+  font-family: var(--star-display);
+  font-size: clamp(2rem, 2vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: rgb(var(--color-foreground));
+}
+
+.multicolumn-card__info .rte {
+  font-size: 1.45rem;
+  line-height: 1.75;
+  color: rgba(var(--color-foreground), 0.7);
+}
+
+.multicolumn.background-secondary .multicolumn-card {
+  background: transparent;
+}
+
+/* ---------- Formulario de contacto ---------- */
+
+.contact .field,
+.customer .field,
+.newsletter-form .field {
+  border-radius: 0;
+}
+
+.contact .field__input,
+.contact .text-area,
+.customer .field__input {
+  padding: 1.5rem 0;
+  border: 0;
+  border-bottom: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--star-body);
+  font-size: 1.5rem;
+  color: rgb(var(--color-foreground));
+  transition: border-color var(--star-fast) var(--star-ease);
+}
+
+/* El caret del select es absoluto en right:0; Dawn le reserva 3rem de
+ * padding. Sin ese hueco la flecha cae sobre el texto de la opción. */
+.customer select {
+  padding: 1.5rem 3rem 1.5rem 0;
+  border: 0;
+  border-bottom: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--star-body);
+  font-size: 1.5rem;
+  color: rgb(var(--color-foreground));
+}
+
+.contact .field__input:focus,
+.contact .text-area:focus,
+.customer .field__input:focus {
+  outline: 0;
+  border-bottom-color: rgb(var(--color-foreground));
+  box-shadow: none;
+}
+
+.contact .field__label,
+.customer .field__label {
+  left: 0;
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  color: var(--star-muted);
+}
+
+.contact .field:before,
+.contact .field:after,
+.customer .field:before,
+.customer .field:after {
+  content: none;
+}
+
+.contact__button {
+  margin-top: 1.2rem;
+}
+
+.contact__field-error,
+.form__message {
+  font-family: var(--star-body);
+  font-size: 1.25rem;
+  color: #8a3b3b;
+}
+
+/* ---------- Newsletter de sección ---------- */
+
+.newsletter__wrapper {
+  padding-block: clamp(4.8rem, 6vw, 8rem);
+}
+
+.newsletter__subheading {
+  color: rgba(var(--color-foreground), 0.72);
+  font-size: var(--star-fs-body-l);
+  line-height: 1.7;
+}
+
+/* Mismo caso que en el footer: el botón absoluto necesita su hueco. */
+.newsletter-form__field-wrapper .field__input {
+  padding: 1.5rem 5rem 1.5rem 0;
+  border: 0;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.36);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--star-body);
+}
+
+.newsletter-form__field-wrapper .field:before,
+.newsletter-form__field-wrapper .field:after {
+  content: none;
+}
+
+/* ==================================================================
+ * 4. ERROR 404
+ * ================================================================== */
+
+.template-404 {
+  max-width: none;
+  padding-inline: var(--star-gutter);
+  padding-block: clamp(8rem, 12vw, 16rem);
+  text-align: left;
+}
+
+.template-404 .star-404 {
+  max-width: 54rem;
+}
+
+/* El beige sobre crema daba 1.3:1 — a ese contraste el número no se
+ * lee, se adivina. El mocha da 3.5:1, suficiente para texto grande. */
+.template-404 .star-404__code {
+  display: block;
+  font-family: var(--star-display);
+  font-size: clamp(8rem, 16vw, 20rem);
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--star-mocha);
+}
+
+.template-404 .star-404__title {
+  margin: clamp(1.6rem, 2vw, 2.4rem) 0 0;
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-m);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: var(--star-ls-display);
+  color: var(--star-black);
+}
+
+.template-404 .star-404__text {
+  margin: 1.6rem 0 0;
+  max-width: 46ch;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-body-l);
+  line-height: 1.75;
+  color: var(--star-muted);
+}
+
+.template-404 .star-404__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.6rem, 2.5vw, 3.2rem);
+  margin-top: clamp(2.8rem, 3.5vw, 4rem);
+}
+
+/* ==================================================================
+ * 5. BLOG
+ * ================================================================== */
+
+.blog-articles {
+  column-gap: var(--star-grid-gap);
+  row-gap: clamp(3.2rem, 4vw, 5.6rem);
+}
+
+.article-card__image-wrapper .media,
+.article-card .card__inner {
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--star-beige);
+}
+
+.article-card__title,
+.article-card__title a {
+  font-family: var(--star-display);
+  font-size: clamp(2rem, 2.2vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+.article-card__excerpt {
+  font-size: 1.4rem;
+  line-height: 1.75;
+  color: var(--star-muted);
+}
+
+.article-card__info,
+.circle-divider {
+  font-family: var(--star-body);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--star-muted);
+}
+
+.article-template__content {
+  max-width: 68ch;
+  margin-inline: auto;
+  color: var(--star-muted);
+}
+
+.article-template__hero-container .article-template__hero {
+  border-radius: 0;
+}
+
+/* ==================================================================
+ * 6. CUENTA DE CLIENTE
+ * ================================================================== */
+
+.customer {
+  max-width: none;
+  padding-inline: var(--star-gutter);
+}
+
+.customer.login,
+.customer.register,
+.customer.reset-password,
+.customer.activate {
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-block: clamp(6.4rem, 8vw, 10rem);
+}
+
+.customer__title {
+  text-align: left;
+  font-size: var(--star-fs-display-s);
+}
+
+.customer table {
+  border-collapse: collapse;
+}
+
+.customer th,
+.customer td {
+  padding: 1.4rem 1.2rem 1.4rem 0;
+  border-bottom: 0.1rem solid var(--star-hair);
+  font-family: var(--star-body);
+  font-size: 1.35rem;
+}
+
+.customer th {
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  color: var(--star-muted);
+}
+
+.customer .button,
+.customer button:not(.quantity__button) {
+  width: 100%;
+  margin-top: 1.6rem;
+}
+
+.customer a:not(.button) {
+  color: var(--star-mocha-ink);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  text-underline-offset: 0.4rem;
+}
+
+.customer a:not(.button):hover {
+  color: var(--star-black);
+}
+
+/* ==================================================================
+ * 7. RESPONSIVE
+ * ================================================================== */
+
+@media screen and (max-width: 749px) {
+  .cart-item__media {
+    width: 8rem;
+  }
+
+  .cart-item__name,
+  .cart-item__name.h4 {
+    font-size: 1.8rem;
+  }
+
+  .rich-text__heading,
+  .main-page-title,
+  .article-template__title,
+  .cart__empty-text,
+  .template-404 .star-404__title {
+    font-size: clamp(2.8rem, 9vw, 3.8rem);
+  }
+
+  .customer .button,
+  .customer button:not(.quantity__button) {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart__checkout-button,
+  .cart-remove-button .button,
+  .contact .field__input,
+  .cart-item__name {
+    transition-duration: 1ms;
+  }
+}

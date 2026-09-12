@@ -1,0 +1,535 @@
+/*
+ * star-chrome.css — Header, barra de anuncio y footer
+ * ===================================================
+ * Overrides sobre el markup de Dawn. No se toca su Liquid ni su JS: el
+ * menú drawer, el mega menú, el buscador predictivo y la burbuja del
+ * carrito siguen funcionando tal cual.
+ *
+ * Los colores salen de los esquemas del tema (--color-foreground /
+ * --color-background) siempre que se pueda, para que el selector de
+ * esquema del editor siga sirviendo. Sólo se fija color literal donde
+ * la decisión es de marca y no debe poder romperse desde el editor.
+ *
+ * Requiere star-moda.css (tokens). Se carga después de base.css.
+ */
+
+/* ==================================================================
+ * 1. BARRA DE ANUNCIO
+ * ================================================================== */
+
+.announcement-bar {
+  border: 0;
+}
+
+.announcement-bar__message,
+.announcement-bar__link .announcement-bar__message {
+  padding: 1.3rem var(--star-gutter);
+  min-height: 0;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+/* El separador "·" que escribe la clienta se tiñe de dorado */
+.announcement-bar__message {
+  color: rgba(var(--color-foreground), 0.92);
+}
+
+.announcement-bar__link {
+  text-decoration: none;
+}
+
+.announcement-bar__link:hover .announcement-bar__message {
+  color: rgb(var(--color-foreground));
+}
+
+/* ==================================================================
+ * 2. HEADER
+ * ================================================================== */
+
+.header-wrapper {
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+.header-wrapper--border-bottom {
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+/* A sangre, alineado al mismo canal que las bandas de la home */
+.header.page-width {
+  max-width: none;
+  padding-inline: var(--star-gutter);
+  padding-block: clamp(1.6rem, 2vw, 2.4rem);
+  gap: clamp(1.6rem, 3vw, 4rem);
+}
+
+.header__heading,
+.header__heading-link {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.header__heading-logo {
+  height: auto;
+}
+
+/* ---------- Menú principal ---------- */
+
+.header__inline-menu {
+  margin: 0;
+}
+
+/* El espaciado horizontal del menú lo daba el `padding: 1.2rem` de Dawn.
+ * Aquí el padding se quita para que el filete del subrayado mida
+ * exactamente el texto, así que la separación pasa al gap de la lista
+ * (ver .header__inline-menu .list-menu--inline). Sin una de las dos
+ * cosas, los rótulos salen pegados: "INICIOPRODUCTOSCONTACTO". */
+.header__inline-menu .list-menu--inline {
+  gap: clamp(1.8rem, 2.2vw, 3.2rem);
+  column-gap: clamp(1.8rem, 2.2vw, 3.2rem);
+}
+
+.header__menu-item {
+  padding: 0.8rem 0;
+  font-family: var(--star-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+/* Dawn subraya con text-decoration; aquí es un filete que crece */
+.header__menu-item span {
+  position: relative;
+  text-decoration: none !important;
+  padding-bottom: 0.4rem;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 0.1rem;
+  transition: background-size var(--star-fast) var(--star-ease);
+}
+
+.header__menu-item:hover span,
+.header__menu-item[aria-expanded='true'] span {
+  background-size: 100% 0.1rem;
+}
+
+.header__inline-menu .list-menu__item--active span {
+  background-size: 100% 0.1rem;
+}
+
+/* ---------- Desplegable simple ---------- */
+
+.header__submenu.list-menu--disclosure {
+  padding: 1.6rem 0;
+  border: 0.1rem solid var(--star-hair);
+  border-radius: 0;
+  background: var(--star-cream);
+  box-shadow: none;
+}
+
+.header__submenu .header__menu-item {
+  padding: 0.9rem 2.4rem;
+  letter-spacing: 0.12em;
+}
+
+/* ---------- Mega menú ---------- */
+
+.mega-menu__content {
+  padding: clamp(3.2rem, 4vw, 5.6rem) var(--star-gutter);
+  border: 0;
+  border-top: 0.1rem solid var(--star-hair);
+  border-radius: 0;
+  background: var(--star-cream);
+  box-shadow: none;
+}
+
+.mega-menu__list {
+  gap: clamp(2.4rem, 3vw, 4.8rem);
+  column-gap: clamp(2.4rem, 3vw, 4.8rem);
+}
+
+.mega-menu__link {
+  padding: 0.6rem 0;
+  font-family: var(--star-body);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--star-muted);
+  text-decoration: none;
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+.mega-menu__link:hover,
+.mega-menu__link--active {
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+/* La cabecera de cada columna del mega menú, en Cormorant */
+.mega-menu__list > li > .mega-menu__link {
+  margin-bottom: 0.8rem;
+  font-family: var(--star-display);
+  font-size: 1.9rem;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: var(--star-black);
+}
+
+/* ---------- Iconos ---------- */
+
+.header__icons {
+  gap: 0.4rem;
+  padding-right: 0;
+}
+
+.header__icon,
+.header__icon--cart {
+  color: var(--star-black);
+  transition: opacity var(--star-fast) var(--star-ease);
+}
+
+.header__icon:hover {
+  opacity: 0.6;
+}
+
+/* Burbuja del carrito: círculo espresso, no el pill por defecto */
+/* Sólo color. Los offsets son de Dawn y están calibrados contra el
+ * icono de 2rem dentro del .svg-wrapper de 44px; moverlos a ojo
+ * descuadraba la burbuja sobre el asa del carrito. */
+.cart-count-bubble {
+  background: var(--star-black);
+  color: var(--star-cream);
+  font-family: var(--star-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* ---------- Header pegajoso ---------- */
+
+.shopify-section-header-sticky {
+  box-shadow: none;
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+/* ---------- Drawer móvil ---------- */
+
+.menu-drawer {
+  border: 0;
+  background: var(--star-cream);
+}
+
+.menu-drawer__inner-container {
+  background: var(--star-cream);
+}
+
+.menu-drawer__navigation {
+  padding: 3.2rem 0;
+}
+
+.menu-drawer__menu-item {
+  padding: 1.6rem var(--star-gutter);
+  font-family: var(--star-display);
+  font-size: 2.4rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--star-black);
+}
+
+.menu-drawer__menu-item:hover,
+.menu-drawer__menu-item--active {
+  background: transparent;
+  color: var(--star-mocha-ink);
+  text-decoration: none;
+}
+
+.menu-drawer__utility-links {
+  padding: 2.4rem var(--star-gutter);
+  background: var(--star-beige);
+}
+
+.menu-drawer__account {
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* ---------- Buscador ---------- */
+
+/* Dawn reserva 5rem a la derecha para el botón de cerrar, que es
+ * absoluto. El gutter baja a 2rem en móvil, así que se pone un piso. */
+.search-modal__content {
+  padding-left: var(--star-gutter);
+  padding-right: max(var(--star-gutter), 5rem);
+}
+
+.search__input.field__input {
+  border-radius: 0;
+}
+
+.predictive-search {
+  border: 0.1rem solid var(--star-hair);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--star-cream);
+}
+
+.predictive-search__heading {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  color: var(--star-muted);
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+/* ==================================================================
+ * 3. FOOTER
+ * ================================================================== */
+
+.footer {
+  border-top: 0;
+  margin-top: 0;
+}
+
+.footer__content-top {
+  padding-block: clamp(5.6rem, 7vw, 9.6rem) clamp(3.2rem, 4vw, 5.6rem);
+  padding-inline: var(--star-gutter);
+  max-width: none;
+}
+
+.footer__content-top .grid {
+  gap: clamp(3.2rem, 4vw, 6.4rem);
+}
+
+.footer-block__heading {
+  margin-bottom: 1.8rem;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+}
+
+.footer-block__details-content,
+.footer-block__details-content .list-menu__item--link {
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  line-height: 2;
+  color: rgba(var(--color-foreground), 0.62);
+}
+
+.footer-block__details-content .list-menu__item--link {
+  padding: 0.2rem 0;
+  text-decoration: none;
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+.footer-block__details-content .list-menu__item--link:hover {
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+}
+
+/* La marca en el footer, en Cormorant */
+.footer-block__brand-info .footer-block__heading,
+.footer-block--newsletter .footer-block__heading {
+  font-family: var(--star-display);
+  font-size: clamp(2.4rem, 2.6vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+/* ---------- Newsletter del footer ---------- */
+
+.footer-block__newsletter {
+  padding-block: clamp(2.4rem, 3vw, 4rem);
+  border-top: 0.1rem solid rgba(216, 177, 106, 0.28);
+}
+
+.footer .newsletter-form__field-wrapper .field {
+  gap: 0;
+}
+
+/* El botón de envío es absoluto y mide 4.4rem: sin reservarle el hueco
+ * a la derecha se monta encima del correo que escribe la clienta. */
+.footer .newsletter-form__field-wrapper .field__input {
+  padding: 1.4rem 5rem 1.4rem 0;
+  border: 0;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.36);
+  border-radius: 0;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  font-family: var(--star-body);
+  font-size: 1.4rem;
+  box-shadow: none;
+  transition: border-color var(--star-fast) var(--star-ease);
+}
+
+.footer .newsletter-form__field-wrapper .field__input:focus {
+  outline: 0;
+  border-bottom-color: rgb(var(--color-foreground));
+  box-shadow: none;
+}
+
+.footer .newsletter-form__field-wrapper .field__input::placeholder {
+  color: rgba(var(--color-foreground), 0.5);
+}
+
+.footer .newsletter-form__field-wrapper .field__label {
+  display: none;
+}
+
+.footer .newsletter-form__button {
+  right: 0;
+  color: rgb(var(--color-foreground));
+}
+
+.footer .newsletter-form__button:hover {
+  color: var(--star-gold);
+}
+
+.footer .newsletter-form__button .icon {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+/* ---------- Redes ---------- */
+
+.footer__list-social.list-social {
+  gap: 0.4rem;
+}
+
+.footer .list-social__link {
+  padding: 1.1rem;
+  color: rgba(var(--color-foreground), 0.62);
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+.footer .list-social__link:hover {
+  color: rgb(var(--color-foreground));
+}
+
+.footer .list-social__link .icon {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+
+/* ---------- Franja inferior ---------- */
+
+.footer__content-bottom {
+  padding-inline: var(--star-gutter);
+  border-top: 0.1rem solid rgba(216, 177, 106, 0.28);
+}
+
+.footer__content-bottom-wrapper {
+  max-width: none;
+  padding-block: 2.4rem;
+}
+
+/* Los dos enlaces legales salían pegados: "Tecnología de ShopifyPolítica
+ * de privacidad". */
+.footer__copyright {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+}
+
+.footer__copyright,
+.footer__payment,
+.footer__column--info {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  letter-spacing: 0.08em;
+  color: rgba(var(--color-foreground), 0.42);
+}
+
+.footer__copyright a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer__copyright a:hover {
+  color: rgb(var(--color-foreground));
+}
+
+.footer .list-payment__item {
+  opacity: 0.5;
+  transition: opacity var(--star-fast) var(--star-ease);
+}
+
+.footer:hover .list-payment__item {
+  opacity: 0.75;
+}
+
+/* Selectores de país/idioma: filete, no caja */
+.footer .localization-form__select {
+  border: 0;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.28);
+  border-radius: 0;
+  background: transparent;
+  font-size: var(--star-fs-micro);
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+.footer .disclosure__list {
+  border: 0.1rem solid rgba(var(--color-foreground), 0.16);
+  border-radius: 0;
+  background: rgb(var(--color-background));
+  box-shadow: none;
+}
+
+/* ==================================================================
+ * 4. CARRITO — notificación y drawer
+ * ================================================================== */
+
+.cart-notification,
+.cart-drawer__inner {
+  border-radius: 0;
+  box-shadow: none;
+  border: 0.1rem solid var(--star-hair);
+  background: var(--star-cream);
+}
+
+.cart-notification__heading,
+.cart-drawer__heading {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+.cart-notification-product__name,
+.cart-item__name {
+  font-family: var(--star-display);
+  font-size: 1.9rem;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header__menu-item span,
+  .header__icon,
+  .footer .newsletter-form__field-wrapper .field__input,
+  .footer .list-social__link,
+  .footer .list-payment__item {
+    transition-duration: 1ms;
+  }
+}

@@ -1,0 +1,788 @@
+/*
+ * star-product.css — Ficha de producto (PDP)
+ * ==========================================
+ * Se carga sólo en request.page_type == 'product' (ver layout/theme.liquid).
+ * Depende de los tokens y primitivas de star-moda.css. El picker de tallas
+ * y los swatches de color ya están resueltos en star-moda.css §1 y §2; aquí
+ * no se repiten.
+ *
+ * Criterio: la PDP de Dawn mete título, precio, selectores y acordeones en
+ * una columna con separaciones iguales, así que nada pesa más que lo demás.
+ * Aquí se ordena en tres bloques con jerarquía propia:
+ *
+ *   1. Identidad   título en Cormorant grande + precio
+ *   2. Decisión    color, talla, cantidad, añadir al carrito
+ *   3. Detalle     acordeones de ficha técnica, envíos y cuidados
+ *
+ * La foto ocupa más ancho que en Dawn (58/42 en vez de 50/50): en moda la
+ * imagen es el argumento de venta, no un acompañamiento.
+ */
+
+/* ==================================================================
+ * 1. LAYOUT
+ * ================================================================== */
+
+.product.grid,
+.product {
+  gap: 0;
+}
+
+@media screen and (min-width: 990px) {
+  .product--large:not(.product--no-media) .product__media-wrapper,
+  .product:not(.product--no-media) .product__media-wrapper {
+    width: 58%;
+    max-width: 58%;
+    padding: 0;
+  }
+
+  .product--large:not(.product--no-media) .product__info-wrapper,
+  .product:not(.product--no-media) .product__info-wrapper {
+    width: 42%;
+    max-width: 42%;
+    padding-left: clamp(3.2rem, 4.5vw, 7.2rem);
+  }
+
+  .product__info-wrapper--extra-padding {
+    padding-left: clamp(3.2rem, 4.5vw, 7.2rem);
+  }
+}
+
+/* A sangre, mismo canal que la home y la colección.
+ * Dawn envuelve la ficha en un .page-width sin clase propia, así que se
+ * identifica por su hijo. Si el navegador no soporta :has() la regla se
+ * ignora y la ficha queda con el ancho máximo del tema: se degrada bien. */
+#MainContent .page-width:has(> .product) {
+  max-width: none;
+  padding-inline: var(--star-gutter);
+}
+
+.product__info-container {
+  max-width: 52rem;
+}
+
+/* La columna pegajosa arranca por debajo del header fijo */
+.product__column-sticky {
+  top: 10rem;
+}
+
+/* ==================================================================
+ * 2. GALERÍA
+ * ================================================================== */
+
+.product__media-wrapper .product__media,
+.product__media-wrapper .media,
+.product-media-container {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--star-beige);
+}
+
+.product-media-container.constrain-height .product__media {
+  border-radius: 0;
+}
+
+.product__media-item .product__media img {
+  object-fit: cover;
+}
+
+/* ---------- Miniaturas ---------- */
+
+.thumbnail-list {
+  gap: 0.8rem;
+}
+
+.thumbnail-slider {
+  margin-top: 0.8rem;
+}
+
+.thumbnail {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--star-beige);
+  transition: opacity var(--star-fast) var(--star-ease);
+}
+
+.thumbnail:hover {
+  opacity: 0.78;
+}
+
+.thumbnail img {
+  border-radius: 0;
+  object-fit: cover;
+}
+
+/* Miniatura activa: filete espresso al pie, no un anillo */
+.thumbnail[aria-current='true'] {
+  box-shadow: none;
+  outline: 0;
+}
+
+.thumbnail[aria-current='true']:after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  height: 0.2rem;
+  background: var(--star-black);
+}
+
+.thumbnail:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem var(--star-cream), 0 0 0 0.35rem var(--star-black);
+}
+
+.thumbnail-list__item {
+  border-radius: 0;
+}
+
+/* ---------- Flechas y contador del slider móvil ---------- */
+
+.product__media-wrapper .slider-button,
+.product__media-wrapper .slider-counter {
+  color: var(--star-black);
+}
+
+.product__media-wrapper .slider-counter__link {
+  padding: 0.6rem;
+}
+
+.product__media-wrapper .slider-counter__link--dots .dot {
+  border-color: var(--star-hair-strong);
+  background: transparent;
+}
+
+.product__media-wrapper .slider-counter__link--active .dot {
+  background: var(--star-black);
+  border-color: var(--star-black);
+}
+
+/* ==================================================================
+ * 3. IDENTIDAD — título y precio
+ * ================================================================== */
+
+.product__title {
+  margin-bottom: 1.2rem;
+}
+
+.product__title > h1,
+.product__title > a > h2,
+.product__title .h1 {
+  margin: 0;
+  font-family: var(--star-display);
+  font-size: clamp(3.2rem, 3.4vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: var(--star-ls-display);
+  color: var(--star-black);
+  text-wrap: balance;
+}
+
+.product__title > a {
+  text-decoration: none;
+}
+
+/* El vendor / tipo por encima del título, en versalitas */
+.product__text.caption-with-letter-spacing,
+.product__text.subtitle {
+  margin: 0 0 1.4rem;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--star-mocha-ink);
+}
+
+/* ---------- Precio ---------- */
+
+.product__info-container .price {
+  font-family: var(--star-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.product__info-container .price--large .price-item {
+  font-size: 2.2rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--star-black);
+}
+
+.product__info-container .price__sale .price-item--regular {
+  margin-right: 1rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--star-muted);
+  text-decoration: line-through;
+}
+
+/* Badge de rebaja: rosa nude, cuadrado */
+.product__info-container .price__badge-sale,
+.product__info-container .price__badge-sold-out {
+  margin-left: 1.2rem;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0;
+  background: var(--star-rose);
+  color: var(--star-black);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.product__info-container .price__badge-sold-out {
+  background: var(--star-black);
+  color: var(--star-cream);
+}
+
+.product__tax {
+  margin-top: 0.8rem;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: var(--star-muted);
+}
+
+.product__tax a {
+  color: var(--star-mocha-ink);
+  text-underline-offset: 0.3rem;
+}
+
+/* Regla que cierra el bloque de identidad */
+.product__info-container > div[id^='price-'] {
+  padding-bottom: clamp(2rem, 2.5vw, 2.8rem);
+  border-bottom: 0.1rem solid var(--star-hair);
+  margin-bottom: clamp(2.4rem, 3vw, 3.2rem);
+}
+
+/* ---------- Inventario y SKU ---------- */
+
+.product__inventory {
+  margin-bottom: 1.2rem;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  color: var(--star-mocha-ink);
+}
+
+.product__sku {
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--star-muted);
+}
+
+/* ==================================================================
+ * 4. DECISIÓN — variantes, cantidad, compra
+ * ================================================================== */
+
+.product-form__input {
+  margin-bottom: 2.4rem;
+  max-width: none;
+}
+
+/* ---------- Selector de cantidad: filete, no caja ---------- */
+
+.product-form__quantity {
+  margin-bottom: 2.4rem;
+}
+
+.product-form__quantity .form__label,
+.quantity__label {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: var(--star-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--star-muted);
+}
+
+.product-form__quantity .quantity {
+  width: 13rem;
+  min-height: 4.8rem;
+  border: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+}
+
+.product-form__quantity .quantity:after {
+  content: none;
+}
+
+.quantity__button {
+  color: var(--star-black);
+  transition: opacity var(--star-fast) var(--star-ease);
+}
+
+.quantity__button:hover {
+  opacity: 0.55;
+}
+
+.quantity__input {
+  font-family: var(--star-body);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--star-black);
+}
+
+/* ---------- Botones de compra ---------- */
+
+.product-form__buttons {
+  max-width: none;
+}
+
+.product-form__submit {
+  min-height: 5.6rem;
+  padding: 1.8rem 3.2rem;
+  border: 0.1rem solid var(--star-black);
+  border-radius: 0;
+  background: var(--star-black);
+  color: var(--star-cream);
+  box-shadow: none;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  transition: background var(--star-fast) var(--star-ease), color var(--star-fast) var(--star-ease),
+    border-color var(--star-fast) var(--star-ease);
+}
+
+.product-form__submit:after,
+.product-form__submit:before {
+  content: none;
+}
+
+.product-form__submit:not([disabled]):hover {
+  background: var(--star-mocha);
+  border-color: var(--star-mocha);
+  color: var(--star-cream);
+}
+
+.product-form__submit[disabled],
+.product-form__submit[aria-disabled='true'] {
+  background: transparent;
+  border-color: var(--star-hair-strong);
+  color: var(--star-muted);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* Botón de pago dinámico (Shop Pay y demás): secundario, contorno */
+.shopify-payment-button__button--unbranded {
+  min-height: 5.6rem;
+  border: 0.1rem solid var(--star-black);
+  border-radius: 0;
+  background: transparent;
+  color: var(--star-black);
+  font-family: var(--star-body);
+  font-size: var(--star-fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  background: var(--star-black);
+  color: var(--star-cream);
+}
+
+.shopify-payment-button__more-options {
+  margin-top: 1.2rem;
+  font-family: var(--star-body);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--star-mocha-ink);
+  text-underline-offset: 0.4rem;
+}
+
+.product-form__error-message-wrapper {
+  margin-bottom: 1.6rem;
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  color: #8a3b3b;
+}
+
+/* ---------- Recogida en tienda ---------- */
+
+.product__pickup-availabilities {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 0.1rem solid var(--star-hair);
+}
+
+.pickup-availability-preview {
+  gap: 1.2rem;
+}
+
+.pickup-availability-info p,
+.pickup-availability-info .caption {
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  color: var(--star-muted);
+}
+
+.pickup-availability-button {
+  color: var(--star-mocha-ink);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-underline-offset: 0.4rem;
+}
+
+/* ==================================================================
+ * 5. DETALLE — descripción y acordeones
+ * ================================================================== */
+
+.product__description {
+  margin-bottom: 0.8rem;
+  font-family: var(--star-body);
+  font-size: 1.5rem;
+  line-height: 1.8;
+  color: var(--star-muted);
+}
+
+.product__description p:first-child {
+  margin-top: 0;
+}
+
+.product__accordion {
+  border-bottom: 0.1rem solid var(--star-hair);
+  margin: 0;
+}
+
+/* El primer acordeón cierra contra la descripción con su propia regla */
+.product__accordion:first-of-type {
+  border-top: 0.1rem solid var(--star-hair);
+  margin-top: clamp(2.4rem, 3vw, 3.2rem);
+}
+
+.product__accordion .accordion__title,
+.product__accordion .summary__title h2 {
+  margin: 0;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  color: var(--star-black);
+}
+
+/* Igual que en los filtros: el caret de Dawn es absoluto dentro del
+ * summary, así que el padding derecho le reserva el sitio. */
+.product__accordion summary {
+  padding: 1.9rem 2rem 1.9rem 0;
+  cursor: pointer;
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+.product__accordion summary:hover .accordion__title {
+  color: var(--star-mocha-ink);
+}
+
+.product__accordion .summary__title {
+  gap: 1.2rem;
+}
+
+/* snippets/icon-accordion.liquid envuelve el svg en .svg-wrapper; no
+ * existe ninguna clase .icon-accordion a la que apuntar. */
+.product__accordion .summary__title .svg-wrapper {
+  width: 1.7rem;
+  height: 1.7rem;
+  color: var(--star-mocha);
+  fill: currentColor;
+}
+
+.product__accordion .icon-caret {
+  right: 0;
+}
+
+.product__accordion .accordion__content {
+  padding: 0 0 2.4rem;
+  font-family: var(--star-body);
+  font-size: 1.4rem;
+  line-height: 1.8;
+  color: var(--star-muted);
+}
+
+.product__accordion .accordion__content > *:first-child {
+  margin-top: 0;
+}
+
+.product__accordion .accordion__content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Ficha técnica (bloque star_specs) ---------- */
+
+.star-specs {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.star-specs__row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 12rem) 1fr;
+  gap: 1.6rem;
+  padding: 1rem 0;
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+.star-specs__row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.star-specs__term {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--star-muted);
+  line-height: 1.7;
+}
+
+.star-specs__value {
+  margin: 0;
+  color: var(--star-black);
+  line-height: 1.7;
+  white-space: pre-line; /* respeta los saltos de los metafields multilínea */
+}
+
+/* ---------- Guía de tallas ---------- */
+
+/* Se abre con <details>: sin JS, y funciona aunque el script del tema falle */
+.star-size-guide {
+  margin: -0.8rem 0 2.4rem;
+}
+
+.star-size-guide__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: fit-content;
+  padding: 0;
+  list-style: none;
+  color: var(--star-mocha-ink);
+  font-family: var(--star-body);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.4rem;
+  text-decoration-thickness: 0.1rem;
+  cursor: pointer;
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+/* Safari sigue pintando el triángulo por defecto sin esto */
+.star-size-guide__trigger::-webkit-details-marker {
+  display: none;
+}
+
+.star-size-guide__trigger:hover {
+  color: var(--star-black);
+}
+
+.star-size-guide__trigger:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem var(--star-cream), 0 0 0 0.35rem var(--star-black);
+}
+
+.star-size-guide__trigger .svg-wrapper,
+.star-size-guide__trigger svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+}
+
+.star-size-guide__panel {
+  margin-top: 1.6rem;
+  padding: 2rem;
+  border: 0.1rem solid var(--star-hair);
+  background: var(--star-white);
+}
+
+.star-size-guide__panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Sólo visible en el editor del tema, para avisar del dato que falta */
+.star-size-guide__empty {
+  margin: -0.8rem 0 2.4rem;
+  padding: 1.2rem 1.4rem;
+  border-left: 0.2rem solid var(--star-gold);
+  background: var(--star-white);
+  font-family: var(--star-body);
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--star-muted);
+}
+
+.star-size-guide__empty code,
+.product__accordion .accordion__content code {
+  font-size: 0.92em;
+  color: var(--star-black);
+  background: var(--star-beige);
+  padding: 0.1rem 0.4rem;
+}
+
+.star-size-guide__note {
+  margin: 1.2rem 0 0;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--star-muted);
+  white-space: pre-line;
+}
+
+/* ---------- Compartir ---------- */
+
+.share-button__button {
+  padding: 0;
+  color: var(--star-mocha-ink);
+  font-family: var(--star-body);
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.share-button__button:hover {
+  color: var(--star-black);
+}
+
+.share-button__fallback {
+  border: 0.1rem solid var(--star-hair);
+  border-radius: 0;
+  background: var(--star-white);
+  box-shadow: none;
+}
+
+.share-button__fallback .field__input,
+.share-button__fallback input {
+  border-radius: 0;
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+}
+
+/* ==================================================================
+ * 6. MODAL DE MEDIOS Y POPUP
+ * ================================================================== */
+
+.product-media-modal__content,
+.product-popup-modal__content {
+  border-radius: 0;
+  background: var(--star-cream);
+}
+
+.product-media-modal__toggle,
+.product-popup-modal__toggle {
+  border: 0.1rem solid var(--star-hair);
+  border-radius: 0;
+  background: var(--star-cream);
+  color: var(--star-black);
+  box-shadow: none;
+}
+
+.product-popup-modal__content-info {
+  font-family: var(--star-body);
+  color: var(--star-muted);
+}
+
+.product-popup-modal__opener .link {
+  color: var(--star-mocha-ink);
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-underline-offset: 0.4rem;
+}
+
+/* ==================================================================
+ * 7. PRODUCTOS RELACIONADOS
+ * ================================================================== */
+
+.related-products.page-width {
+  max-width: none;
+  padding-inline: var(--star-gutter);
+}
+
+.related-products {
+  padding-block: clamp(4.8rem, 6vw, 8rem) clamp(4.8rem, 6vw, 8.8rem);
+  border-top: 0.1rem solid var(--star-hair);
+}
+
+.related-products__heading {
+  position: relative;
+  margin: 0 0 clamp(2.8rem, 3.5vw, 4.4rem);
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-s);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: var(--star-ls-display);
+  text-align: left;
+  color: var(--star-black);
+}
+
+.related-products__heading::before {
+  content: '';
+  display: block;
+  width: 3.2rem;
+  height: 0.1rem;
+  margin-bottom: 1.8rem;
+  background: var(--star-gold);
+}
+
+.related-products .product-grid {
+  column-gap: var(--star-grid-gap);
+  row-gap: clamp(3.2rem, 4vw, 4.8rem);
+}
+
+/* ==================================================================
+ * 8. RESPONSIVE
+ * ================================================================== */
+
+@media screen and (max-width: 989px) {
+  .product__info-wrapper {
+    padding-inline: var(--star-gutter);
+    padding-top: clamp(2.8rem, 4vw, 4rem);
+  }
+
+  .product__info-container {
+    max-width: none;
+  }
+
+  .product__column-sticky {
+    position: static;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .product__title > h1,
+  .product__title > a > h2,
+  .product__title .h1 {
+    font-size: clamp(2.8rem, 8vw, 3.6rem);
+  }
+
+  .star-specs__row {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumbnail,
+  .product-form__submit,
+  .star-size-guide__trigger,
+  .quantity__button {
+    transition-duration: 1ms;
+  }
+}

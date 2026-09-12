@@ -103,8 +103,8 @@
     "drawer_shadow_blur": 0,
     "badge_position": "top left",
     "badge_corner_radius": 0,
-    "sale_badge_color_scheme": "scheme-4",
-    "sold_out_badge_color_scheme": "scheme-2",
+    "sale_badge_color_scheme": "scheme-3",
+    "sold_out_badge_color_scheme": "scheme-4",
     "brand_headline": "",
     "brand_description": "<p></p>",
     "brand_image_width": 100,
@@ -204,7 +204,8 @@
           "shadow": "#1c1b1a"
         }
       }
-    }
+    },
+    "new_badge_days": 0
   },
   "presets": {
     "Dawn": {

@@ -15,118 +15,113 @@
         "collection_western": {
           "type": "collection_card",
           "settings": {
-            "collection": "",
+            "collection": "western",
             "title": "Western",
-            "caption": "42 piezas",
+            "caption": "",
             "link": ""
           }
         },
         "collection_clean": {
           "type": "collection_card",
           "settings": {
-            "collection": "",
+            "collection": "clean-girl",
             "title": "Clean Girl",
-            "caption": "38 piezas",
+            "caption": "",
             "link": ""
           }
         },
         "collection_sets": {
           "type": "collection_card",
           "settings": {
-            "collection": "",
+            "collection": "conjuntos",
             "title": "Conjuntos",
-            "caption": "24 piezas",
+            "caption": "",
             "link": ""
           }
         },
         "collection_new": {
           "type": "collection_card",
           "settings": {
-            "collection": "",
+            "collection": "nuevos-ingresos",
             "title": "Novedades",
             "caption": "Esta semana",
             "link": ""
           }
-        }
+        },
+        "ig_1": { "type": "instagram_tile", "settings": { "link": "" } },
+        "ig_2": { "type": "instagram_tile", "settings": { "link": "" } },
+        "ig_3": { "type": "instagram_tile", "settings": { "link": "" } },
+        "ig_4": { "type": "instagram_tile", "settings": { "link": "" } },
+        "ig_5": { "type": "instagram_tile", "settings": { "link": "" } },
+        "ig_6": { "type": "instagram_tile", "settings": { "link": "" } }
       },
       "block_order": [
         "collection_western",
         "collection_clean",
         "collection_sets",
-        "collection_new"
+        "collection_new",
+        "ig_1",
+        "ig_2",
+        "ig_3",
+        "ig_4",
+        "ig_5",
+        "ig_6"
       ],
       "settings": {
-        "show_announcement": true,
+        "show_announcement": false,
         "announcement_text_1": "Envío gratis en compras mayores a $999",
         "announcement_text_2": "Recogida en tienda disponible",
         "announcement_text_3": "Nuevos ingresos cada semana",
         "hero_tag": "Nueva Colección",
         "hero_eyebrow": "Western & Clean Girl",
-        "hero_title": "Estilo que <em>te define.</em>",
-        "hero_text": "<p>Moda femenina con carácter. Piezas que combinan la esencia western con el minimalismo contemporáneo.</p>",
+        "hero_title": "Estilo que <em>te define.<\/em>",
+        "hero_text": "<p>Moda femenina con carácter. Piezas que combinan la esencia western con el minimalismo contemporáneo.<\/p>",
         "hero_button_label": "Ver colección",
-        "hero_button_link": "/collections/all",
+        "hero_button_link": "shopify:\/\/collections\/all",
         "hero_secondary_label": "Nuevos ingresos",
-        "hero_secondary_link": "/collections/all",
+        "hero_secondary_link": "shopify:\/\/collections\/nuevos-ingresos",
+        "hero_cue": "Desliza",
         "strip_1": "Envío a todo México",
         "strip_2": "Recogida en tienda",
         "strip_3": "Nuevos ingresos semanales",
         "strip_4": "Atención por WhatsApp",
         "collections_eyebrow": "Explora",
-        "collections_title": "Nuestras <em>colecciones</em>",
-        "new_arrivals_collection": "",
+        "collections_title": "Nuestras <em>colecciones<\/em>",
+        "collections_link_label": "Ver todas",
+        "collections_link": "shopify:\/\/collections",
+        "marquee_words": "Western, Clean Girl, Blusas, Pantalones, Vestidos, Conjuntos, Accesorios",
+        "new_arrivals_collection": "nuevos-ingresos",
         "new_arrivals_eyebrow": "Recién llegado",
-        "new_arrivals_title": "Nuevos <em>ingresos</em>",
+        "new_arrivals_title": "Nuevos <em>ingresos<\/em>",
         "new_arrivals_button_label": "Ver todos los productos",
-        "bestsellers_collection": "",
+        "bestsellers_collection": "mas-vendidos",
         "bestsellers_eyebrow": "Las favoritas",
-        "bestsellers_title": "Más <em>vendidos</em>",
+        "bestsellers_title": "Más <em>vendidos<\/em>",
         "products_to_show": 4,
         "banner_eyebrow": "✦ Star Moda",
-        "banner_title": "Moda que se <em>siente.</em>",
-        "banner_text": "<p>Cada pieza está pensada para mujeres que saben lo que quieren. Western o clean, casual o especial, siempre tú.</p>",
+        "banner_title": "Moda que se <em>siente.<\/em>",
+        "banner_text": "<p>Cada pieza está pensada para mujeres que saben lo que quieren. Western o clean, casual o especial, siempre tú.<\/p>",
         "banner_button_label": "Explorar todo",
-        "banner_button_link": "/collections/all",
+        "banner_button_link": "shopify:\/\/collections\/all",
         "banner_number": "250+",
         "banner_label": "Modelos disponibles",
+        "banner_number_2": "24 h",
+        "banner_label_2": "Envío desde",
+        "show_newsletter": true,
+        "newsletter_eyebrow": "Lista privada",
+        "newsletter_title": "Primero <em>tú.<\/em>",
+        "newsletter_text": "<p>Nuevos ingresos, restocks y ventas privadas antes que nadie.<\/p>",
+        "newsletter_placeholder": "Tu correo electrónico",
+        "newsletter_button_label": "Suscribirme",
+        "newsletter_note": "Sin spam. Cancela cuando quieras.",
         "instagram_eyebrow": "Síguenos",
-        "instagram_title": "En <em>Instagram</em>",
+        "instagram_title": "En <em>Instagram<\/em>",
         "instagram_handle": "@starmodamx",
-        "instagram_link": "https://www.instagram.com/starmodamx/"
-      }
-    },
-    "17792562192afbfc60": {
-      "type": "apps",
-      "blocks": {
-        "instafeed_app_block_rdjLKf": {
-          "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
-          "settings": {
-            "title": "",
-            "title_color": "",
-            "title_size_v2": 0,
-            "alignment": "center",
-            "instafeed_margin_top": 0,
-            "instafeed_margin_bottom": 0,
-            "instafeed_margin_sides": 0,
-            "show_instagram_link": false,
-            "link_alignment": "center",
-            "link_color": "#000000",
-            "background_color": "",
-            "feed_id": "",
-            "html_area": ""
-          }
-        }
-      },
-      "block_order": [
-        "instafeed_app_block_rdjLKf"
-      ],
-      "settings": {
-        "include_margins": true
+        "instagram_link": "https:\/\/www.instagram.com\/starmodamx\/"
       }
     }
   },
   "order": [
-    "star_homepage",
-    "17792562192afbfc60"
+    "star_homepage"
   ]
 }

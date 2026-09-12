@@ -1,0 +1,883 @@
+/*
+ * star-collection.css — Colección, búsqueda y listado de colecciones
+ * ==================================================================
+ * Se carga sólo en request.page_type collection | search | list-collections
+ * (ver layout/theme.liquid). Depende de los tokens y primitivas de
+ * star-moda.css, y de star-card.css para la tarjeta.
+ *
+ * Criterio: la colección es la página que más se recorre y la que decide
+ * la compra. Dawn la resuelve como una caja centrada con filtros en
+ * bloques grises. Aquí se abre a sangre —mismo canal que la home—, los
+ * filtros pierden las cajas y quedan en filetes, y la rejilla respira.
+ *
+ * No se toca el Liquid ni el JS de facets: el markup es el de Dawn y el
+ * filtrado por AJAX sigue funcionando igual.
+ */
+
+/* ==================================================================
+ * 1. CANAL — a sangre, alineado a la home y al header
+ * ================================================================== */
+
+.collection-hero .page-width,
+.facets-vertical.page-width,
+.facets.facets-vertical-sort.page-width,
+.facets-wrapper.page-width,
+.collection.page-width,
+.product-grid-container .page-width,
+.template-search__header.page-width,
+#MainContent .page-width:has(.collection-list) {
+  max-width: none;
+  padding-inline: var(--star-gutter);
+}
+
+/* ==================================================================
+ * 2. ENCABEZADO DE COLECCIÓN
+ *    Dawn centra el título en una caja. Aquí es una banda editorial:
+ *    eyebrow, display grande a la izquierda, descripción acotada.
+ * ================================================================== */
+
+.collection-hero {
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+.collection-hero__inner {
+  padding-block: clamp(4.8rem, 6vw, 8.8rem) clamp(3.2rem, 4vw, 5.6rem);
+  align-items: end;
+  gap: clamp(2.4rem, 4vw, 6rem);
+}
+
+.collection-hero__text-wrapper {
+  max-width: 78rem;
+}
+
+/* El eyebrow no existe en el markup de Dawn: se inyecta con ::before
+ * sobre el título, replicando la regla dorada de .star-eyebrow. */
+.collection-hero__title {
+  position: relative;
+  margin: 0;
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-m);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--star-ls-display);
+  text-transform: none;
+  color: var(--star-black);
+}
+
+.collection-hero__title::before {
+  content: '';
+  display: block;
+  width: 3.2rem;
+  height: 0.1rem;
+  margin-bottom: 2.4rem;
+  background: var(--star-gold);
+}
+
+.collection-hero__description {
+  margin-top: 1.8rem;
+  max-width: 56ch;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-body-l);
+  line-height: 1.75;
+  color: var(--star-muted);
+}
+
+.collection-hero__description > *:first-child {
+  margin-top: 0;
+}
+
+.collection-hero__description > *:last-child {
+  margin-bottom: 0;
+}
+
+.collection-hero__image-container {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Colección sin descripción: el aire de abajo sobra */
+.collection-hero:not(.collection-hero--with-image) .collection-hero__inner {
+  padding-bottom: clamp(2.8rem, 3.5vw, 4.4rem);
+}
+
+/* ==================================================================
+ * 3. BARRA DE ORDEN Y CONTEO
+ * ================================================================== */
+
+.facets.facets-vertical-sort {
+  padding-block: 2rem;
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+.facets-vertical-form {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2.4rem;
+  width: 100%;
+}
+
+.facet-filters.sorting {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.facet-filters__label,
+.facets__heading,
+.facets__summary,
+.mobile-facets__summary,
+.product-count__text,
+.product-count-vertical .product-count__text {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+.facet-filters__label {
+  margin: 0;
+  color: var(--star-muted);
+}
+
+.product-count__text,
+.product-count-vertical .product-count__text {
+  margin: 0;
+  color: var(--star-muted);
+}
+
+/* El select de orden: filete, no caja. Se conserva la flecha de Dawn. */
+.facet-filters .select {
+  min-width: 0;
+}
+
+.facet-filters__sort.select__select,
+.facets__form .select__select {
+  padding: 0.4rem 2.8rem 0.4rem 0;
+  height: auto;
+  min-height: 0;
+  border: 0;
+  border-bottom: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--star-black);
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Dawn dibuja un borde en el contenedor del select */
+.facet-filters .select:after,
+.facets__form .select:after {
+  content: none;
+}
+
+/* ==================================================================
+ * 4. FILTROS VERTICALES
+ *    Sin cajas, sin fondos: una columna de filetes.
+ * ================================================================== */
+
+.facets-vertical {
+  gap: clamp(3.2rem, 4vw, 6.4rem);
+  padding-block: clamp(3.2rem, 4vw, 5.6rem) 0;
+}
+
+.facets-wrapper {
+  flex: 0 0 24rem;
+  max-width: 24rem;
+  padding-right: 0;
+}
+
+.facets-wrapper--no-filters {
+  display: none;
+}
+
+.facets__form.facets__form-vertical,
+.facets__form {
+  gap: 0;
+}
+
+.facets__disclosure-vertical,
+.facets__disclosure {
+  border-bottom: 0.1rem solid var(--star-hair);
+  padding-block: 0;
+}
+
+.facets__disclosure-vertical:first-child,
+.facets__disclosure:first-child {
+  border-top: 0.1rem solid var(--star-hair);
+}
+
+/* El caret de Dawn es absoluto dentro del summary. El padding derecho
+ * le reserva el hueco: sin él, el rótulo se le mete debajo. */
+.facets__summary,
+.facets__summary.caption-large {
+  padding: 1.8rem 2rem 1.8rem 0;
+  color: var(--star-black);
+  cursor: pointer;
+  list-style: none;
+}
+
+.facets__summary:hover {
+  color: var(--star-mocha-ink);
+}
+
+.facets__summary .icon-caret {
+  right: 0;
+  height: 0.6rem;
+}
+
+.facets__display,
+.facets__display-vertical {
+  padding: 0 0 1.8rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.facets__header,
+.facets__header-vertical {
+  padding: 0 0 1.2rem;
+  border: 0;
+  font-family: var(--star-body);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--star-muted);
+}
+
+/* Sin max-height: Dawn ya pagina la lista con su botón "ver más", y
+ * recortarla aquí escondía opciones sin ningún aviso. */
+.facets__list {
+  padding: 0;
+}
+
+.facets__item {
+  margin: 0;
+}
+
+/* ---------- Checkbox: cuadrado fino, marca espresso ---------- */
+
+/* Sólo color y tipografía. La geometría es de Dawn y no se toca: el
+ * <input> va oculto detrás del <svg><rect> con z-index:-1, y el checkmark
+ * es un .svg-wrapper absoluto calibrado contra el padding original. Al
+ * redimensionar el input aparecían dos cajas superpuestas. */
+.facets__label,
+.facet-checkbox {
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  line-height: 1.4;
+  color: var(--star-muted);
+  cursor: pointer;
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+.facets__label:hover,
+.facet-checkbox:hover {
+  color: var(--star-black);
+  background: transparent;
+  text-decoration: none;
+}
+
+/* La caja es el <rect stroke="currentColor"> del svg en flujo: se tiñe
+ * con `color`, sin tocar tamaño ni posición. */
+.facet-checkbox > svg {
+  color: var(--star-hair-strong);
+  transition: color var(--star-duration) ease;
+}
+
+.facet-checkbox:hover > svg {
+  color: var(--star-mocha);
+}
+
+.facet-checkbox > input[type='checkbox']:checked ~ svg {
+  color: var(--star-black);
+}
+
+.facet-checkbox .icon-checkmark {
+  color: var(--star-black);
+}
+
+.facet-checkbox__text-label,
+.facets__label .facet-checkbox__text {
+  font-size: inherit;
+  letter-spacing: 0.01em;
+}
+
+.facet-checkbox input[type='checkbox']:checked ~ .facet-checkbox__text,
+.facets__label input[type='checkbox']:checked ~ .facet-checkbox__text {
+  color: var(--star-black);
+  font-weight: 500;
+}
+
+/* Recuento entre paréntesis, atenuado */
+.facet-checkbox__text-label + span,
+.mobile-facets__count {
+  color: var(--star-muted);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+}
+
+/* Opción sin resultados */
+.facets__label.disabled,
+.facet-checkbox.disabled {
+  opacity: 0.4;
+}
+
+/* ---------- Filtros visuales: swatch e imagen ----------
+ * Los pinta facets.liquid cuando el filtro se configura con presentación
+ * `swatch` o `image` en Search & Discovery (requiere un metaobjeto con
+ * campo de color o de imagen). Sólo color y geometría propia del swatch;
+ * el input sigue siendo la capa invisible de Dawn y no se toca. */
+
+.facets-layout-list--swatch .facets__label {
+  padding: 0.5rem 0;
+  gap: 1rem;
+}
+
+.facets-layout-list--swatch .swatch {
+  --swatch-input--size: 2rem;
+  border: 0.1rem solid var(--star-line-hairline);
+  border-radius: 999px;
+}
+
+.facets-layout-list--swatch .facets__label:hover .swatch {
+  box-shadow: 0 0 0 0.2rem var(--star-cream), 0 0 0 0.3rem var(--star-mocha);
+}
+
+/* Seleccionado: anillo espresso con reserva, igual que el picker de la ficha */
+.facets-layout-list--swatch input[type='checkbox']:checked ~ .swatch-input-wrapper .swatch,
+.facets-layout-list--swatch .swatch-input__input:checked + .swatch-input__label .swatch {
+  box-shadow: 0 0 0 0.2rem var(--star-cream), 0 0 0 0.35rem var(--star-black);
+  border-color: var(--star-black);
+}
+
+.facets-layout-list--swatch input[type='checkbox']:checked ~ .facet-checkbox__text,
+.facets-layout-list--swatch .facets__label:has(:checked) .facet-checkbox__text {
+  color: var(--star-black);
+  font-weight: 500;
+}
+
+/* Rejilla de imagen: cuadrada, sin radio, con el beige de fondo */
+.facets-layout-grid--image {
+  gap: 1rem;
+}
+
+.facets-layout-grid--image .facets__image-wrapper {
+  aspect-ratio: 3 / 4;
+  border: 0.1rem solid var(--star-hair);
+  border-radius: 0;
+  background: var(--star-beige);
+  overflow: hidden;
+  transition: border-color var(--star-fast) var(--star-ease);
+}
+
+.facets-layout-grid--image .facets__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.facets-layout-grid--image .facets__label:hover .facets__image-wrapper {
+  border-color: var(--star-mocha);
+}
+
+.facets-layout-grid--image .facets__label:has(:checked) .facets__image-wrapper {
+  border-color: var(--star-black);
+  border-width: 0.2rem;
+}
+
+.facets-layout-grid--image .facet-checkbox__text {
+  margin-top: 0.6rem;
+  font-size: 1.15rem;
+}
+
+/* ---------- Ver más / Limpiar ---------- */
+
+.button-show-more,
+.facets__reset {
+  padding: 0.6rem 0;
+  color: var(--star-mocha-ink);
+  font-family: var(--star-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 0.1rem solid transparent;
+  transition: border-color var(--star-fast) var(--star-ease);
+}
+
+.button-show-more:hover,
+.facets__reset:hover {
+  color: var(--star-black);
+  border-bottom-color: var(--star-black);
+  text-decoration: none;
+}
+
+/* ---------- Rango de precio ---------- */
+
+.facets__price {
+  gap: 1.2rem;
+  padding-top: 0.4rem;
+}
+
+.facets__price .field__input,
+.facets__price .field {
+  border-radius: 0;
+}
+
+.facets__price .field__input {
+  padding: 1rem 1rem 1rem 2rem;
+  border: 0;
+  border-bottom: 0.1rem solid var(--star-hair-strong);
+  background: transparent;
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  box-shadow: none;
+}
+
+.facets__price .field__label {
+  color: var(--star-muted);
+  font-size: 1.1rem;
+}
+
+.facets__price .field__currency {
+  color: var(--star-muted);
+  font-size: 1.3rem;
+  align-self: center;
+}
+
+/* ---------- Chips de filtro aplicado ---------- */
+
+.active-facets {
+  gap: 0.8rem;
+  margin-bottom: 1.6rem;
+}
+
+.active-facets-vertical-filter {
+  padding-block: 1.6rem 0;
+  margin: 0;
+}
+
+.active-facets__button-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.active-facets__button .active-facets__button-inner,
+.active-facets__button-inner.button {
+  min-height: 0;
+  padding: 0.7rem 1.2rem;
+  border: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--star-black);
+  font-family: var(--star-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background var(--star-fast) var(--star-ease), color var(--star-fast) var(--star-ease);
+}
+
+.active-facets__button:hover .active-facets__button-inner {
+  background: var(--star-black);
+  border-color: var(--star-black);
+  color: var(--star-cream);
+}
+
+.active-facets__button-remove {
+  color: var(--star-mocha-ink);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-underline-offset: 0.4rem;
+}
+
+.active-facets__button-remove:hover {
+  color: var(--star-black);
+  text-decoration: underline;
+}
+
+/* ==================================================================
+ * 5. FILTROS EN MÓVIL (drawer)
+ * ================================================================== */
+
+.mobile-facets__wrapper .mobile-facets__open,
+.menu-opening .mobile-facets__open {
+  padding: 1.2rem 0;
+  border: 0;
+  border-bottom: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--star-black);
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+.mobile-facets__inner {
+  border: 0;
+  border-radius: 0;
+  background: var(--star-cream);
+  box-shadow: none;
+}
+
+.mobile-facets__header {
+  padding: 2rem var(--star-gutter);
+  border-bottom: 0.1rem solid var(--star-hair);
+  background: var(--star-cream);
+}
+
+.mobile-facets__header-inner,
+.mobile-facets__heading {
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+.mobile-facets__details {
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+.mobile-facets__summary {
+  padding: 1.8rem var(--star-gutter);
+  color: var(--star-black);
+}
+
+.mobile-facets__submenu {
+  background: var(--star-cream);
+}
+
+/* Sin tocar el padding: el checkmark del drawer es absoluto en
+ * left:2.8rem y Dawn reserva 2.5rem a la izquierda del rótulo. Al
+ * quitarlo, el icono caía encima del texto del filtro. */
+.mobile-facets__label {
+  font-family: var(--star-body);
+  font-size: 1.4rem;
+  color: var(--star-muted);
+}
+
+.mobile-facets__checkbox:checked + .mobile-facets__highlight ~ .mobile-facets__label,
+.mobile-facets__label:has(.mobile-facets__checkbox:checked) {
+  color: var(--star-black);
+}
+
+.mobile-facets__footer {
+  padding: 1.6rem var(--star-gutter);
+  border-top: 0.1rem solid var(--star-hair);
+  background: var(--star-cream);
+  gap: 1.2rem;
+}
+
+.mobile-facets__footer .button,
+.mobile-facets__footer .mobile-facets__close-button {
+  min-height: 5rem;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--star-ls-micro);
+  text-transform: uppercase;
+}
+
+.mobile-facets__clear,
+.mobile-facets__clear-wrapper .mobile-facets__clear {
+  color: var(--star-mocha-ink);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ==================================================================
+ * 6. REJILLA DE PRODUCTO
+ * ================================================================== */
+
+.product-grid-container {
+  padding-block: 0 clamp(4.8rem, 6vw, 8rem);
+}
+
+.facets-vertical .product-grid-container {
+  padding-top: 0;
+}
+
+.collection .product-grid,
+.template-search .product-grid,
+ul.product-grid {
+  column-gap: var(--star-grid-gap);
+  row-gap: clamp(3.2rem, 4vw, 5.6rem);
+  padding: 0;
+  margin: 0;
+}
+
+/* Dawn deja el grid pegado al borde superior tras la barra de orden */
+.collection {
+  padding-top: clamp(2.4rem, 3vw, 4rem);
+}
+
+.facets-vertical .collection {
+  padding-top: 0;
+}
+
+/* ---------- Estado vacío ---------- */
+
+.collection--empty .title-wrapper {
+  padding-block: clamp(6.4rem, 8vw, 11rem);
+}
+
+.collection--empty .title {
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-s);
+  font-weight: 400;
+  letter-spacing: var(--star-ls-display);
+  color: var(--star-black);
+}
+
+.collection--empty .title + * {
+  margin-top: 1.6rem;
+  color: var(--star-muted);
+}
+
+/* ==================================================================
+ * 7. PAGINACIÓN
+ * ================================================================== */
+
+.pagination-wrapper {
+  margin-top: clamp(4rem, 5vw, 7.2rem);
+  padding-top: clamp(2.4rem, 3vw, 4rem);
+  border-top: 0.1rem solid var(--star-hair);
+}
+
+.pagination__list {
+  gap: 0.4rem;
+}
+
+.pagination__item {
+  width: 4rem;
+  height: 4rem;
+  font-family: var(--star-body);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  color: var(--star-muted);
+  text-decoration: none;
+  transition: color var(--star-fast) var(--star-ease);
+}
+
+.pagination__item:hover {
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+.pagination__item--current {
+  color: var(--star-black);
+  font-weight: 500;
+}
+
+/* Dawn subraya la página actual con un ::after; se afina a filete espresso */
+.pagination__item--current:after,
+.pagination__item:hover:after {
+  height: 0.1rem;
+  background: var(--star-black);
+  opacity: 1;
+}
+
+.pagination__item-arrow .icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* ==================================================================
+ * 8. BÚSQUEDA
+ * ================================================================== */
+
+.template-search__header {
+  padding-block: clamp(4.8rem, 6vw, 8rem) clamp(2.4rem, 3vw, 4rem);
+  border-bottom: 0.1rem solid var(--star-hair);
+}
+
+.template-search__header h1,
+.template-search__header .h2 {
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-m);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--star-ls-display);
+  color: var(--star-black);
+  text-align: left;
+}
+
+.template-search__search {
+  max-width: 52rem;
+  margin: 2.8rem 0 0;
+}
+
+.template-search__search .field {
+  border-radius: 0;
+}
+
+.template-search__search .field:before,
+.template-search__search .field:after {
+  content: none;
+}
+
+.template-search__search .search__input.field__input {
+  padding: 1.4rem 5rem 1.4rem 0;
+  border: 0;
+  border-bottom: 0.1rem solid var(--star-hair-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--star-body);
+  font-size: var(--star-fs-body-l);
+}
+
+.template-search__search .search__input.field__input:focus {
+  outline: 0;
+  border-bottom-color: var(--star-black);
+  box-shadow: none;
+}
+
+.template-search__search .field__label {
+  left: 0;
+  color: var(--star-muted);
+  font-size: 1.3rem;
+}
+
+.template-search__search .field__button {
+  right: 0;
+  color: var(--star-black);
+}
+
+.template-search__results {
+  padding-top: clamp(2.4rem, 3vw, 4rem);
+}
+
+/* Búsqueda sin resultados */
+.template-search--empty {
+  padding-bottom: clamp(6.4rem, 8vw, 10rem);
+}
+
+.template-search__search-in-results,
+.template-search .article-card__excerpt {
+  color: var(--star-muted);
+  font-family: var(--star-body);
+}
+
+/* ==================================================================
+ * 9. LISTADO DE COLECCIONES (/collections)
+ * ================================================================== */
+
+.title.title--primary {
+  margin-bottom: clamp(3.2rem, 4vw, 5.6rem);
+  font-family: var(--star-display);
+  font-size: var(--star-fs-display-m);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--star-ls-display);
+  text-transform: none;
+  color: var(--star-black);
+}
+
+.collection-list {
+  column-gap: var(--star-grid-gap);
+  row-gap: clamp(3.2rem, 4vw, 5.6rem);
+}
+
+.collection-list .card-wrapper .card,
+.collection-list .card {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.collection-list .card__inner {
+  --ratio-percent: 133.333% !important;
+  border-radius: 0;
+  background: var(--star-beige);
+}
+
+.collection-list .card__content {
+  padding: 1.6rem 0 0;
+}
+
+.collection-list .card__heading,
+.collection-list .card__heading a {
+  font-family: var(--star-display);
+  font-size: clamp(2rem, 2vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: var(--star-black);
+  text-decoration: none;
+}
+
+.collection-list .card__media img {
+  transition: transform var(--star-slow) var(--star-ease);
+}
+
+.collection-list .card:hover .card__media img {
+  transform: scale(1.04);
+}
+
+/* ==================================================================
+ * 10. RESPONSIVE
+ * ================================================================== */
+
+@media screen and (max-width: 989px) {
+  .facets-vertical {
+    display: block;
+    padding-top: clamp(2.4rem, 3vw, 3.2rem);
+  }
+
+  .facets-wrapper {
+    max-width: none;
+    flex: none;
+  }
+
+  .collection-hero__inner {
+    display: block;
+  }
+
+  .collection-hero__image-container {
+    margin-top: 2.4rem;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .collection-hero__title,
+  .template-search__header h1,
+  .title.title--primary {
+    font-size: clamp(3rem, 9vw, 4rem);
+  }
+
+  .facets-vertical-form {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .facet-checkbox input[type='checkbox'],
+  .active-facets__button-inner,
+  .collection-list .card__media img,
+  .pagination__item {
+    transition-duration: 1ms;
+  }
+}
